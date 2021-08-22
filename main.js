@@ -1,9 +1,9 @@
 const TeleBot = require('telebot')
 const searchYT = require('yt-search')
-const YoutubeDlWrap = require("youtube-dl-wrap")
-const youtubeDlWrap = new YoutubeDlWrap("./youtube-dl")
+const { exec } = require('child_process')
 require('dotenv').config()
 
+const youtube_dl_path = './youtube-dl'
 const token = process.env.API_KEY
 const bot = new TeleBot(token)
 
@@ -21,10 +21,9 @@ bot.on('text', async (msg) => {
     bot.sendMessage(chatID, `Downloading ${video.title}...`)
         .then(async _ => {
             const path = `storage/${video.title}.mp3`
-            youtubeDlWrap.exec(['--extract-audio', '--audio-format mp3', video.url, "-o", path])
-                .on('close', () => {
-                    bot.sendAudio(chatID, `storage/${video.title}.mp3`)
-                })
+            exec(`${youtube_dl_path} --extract-audio --audio-format mp3 "${video.url}" -o "${path}"`, (err, stdout, stderr) => {
+                bot.sendAudio(chatID, path)
+            })
         })
 })
 
