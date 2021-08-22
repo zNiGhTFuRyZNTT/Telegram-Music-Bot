@@ -30,9 +30,9 @@ bot.on('text', async (msg) => {
                     })
             })
         })
-    } else {
+    } 
+    else
         bot.sendMessage(chatID, `Your music is more than 20 Minutes.`)
-    }
 })
 
 bot.start()
