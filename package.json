@@ -1,0 +1,23 @@
+{
+  "name": "Nelody-Js",
+  "version": "1.0.0",
+  "description": "Telegram music search bot.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zNiGhTFuRyZNTT/Nelody-Js.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zNiGhTFuRyZNTT/Nelody-Js/issues"
+  },
+  "homepage": "https://github.com/zNiGhTFuRyZNTT/Nelody-Js#readme",
+  "dependencies": {
+    "telebot": "^1.4.1"
+  }
+}
