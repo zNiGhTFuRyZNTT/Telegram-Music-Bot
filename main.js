@@ -1,7 +1,8 @@
 const TeleBot = require('telebot')
 const searchYT = require('yt-search')
 require('dotenv').config()
-
+const fs = require('fs');
+const ytdl = require('ytdl-core');
 const token = process.env.API_KEY
 const bot = new TeleBot(token)
 
@@ -17,8 +18,9 @@ bot.on('text', async (msg) => {
     const video = await findVideo(msg.text)
 
     bot.sendMessage(chatID, `Downloading ${video.title}...`)
-        .then(_ => {
-            
+        .then(async _ => {
+            await ytdl(video.url).pipe(fs.createWriteStream(`storage/${video.title}.mp3`));
+            bot.sendAudio(chatID, `storage/${video.title}.mp3`)
         })
 })
 
