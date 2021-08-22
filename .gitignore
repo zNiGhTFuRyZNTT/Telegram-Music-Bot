@@ -1,1 +1,3 @@
 node_modules
+storage/*
+!storage/empty
