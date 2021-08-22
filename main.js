@@ -7,7 +7,7 @@ const bot = new TeleBot(token)
 bot.on(['/start', '/hello'], (msg) => msg.reply.text('Welcome!'))
 
 bot.on('text', async (msg) => {
-    chatID = msg.chat.id;
+    chatID = msg.chat.id
     return bot.sendMessage(chatID, "Ahhhh bokon tooom")
 })
 
