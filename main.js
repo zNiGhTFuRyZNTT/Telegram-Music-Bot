@@ -6,6 +6,7 @@ require('dotenv').config()
 const youtube_dl_path = './youtube-dl'
 const token = process.env.API_KEY
 const bot = new TeleBot(token)
+const status = []
 
 async function findVideo(query) {
     const result = await searchYT(query)
@@ -16,6 +17,13 @@ bot.on(['/start', '/hello'], (msg) => msg.reply.text('Welcome!'))
 
 bot.on('text', async (msg) => {
     const chatID = msg.chat.id
+
+    if (status[chatID]) {
+        bot.sendMessage(chatID, `Please wait until your last query is completed.`)
+        return
+    }
+
+    status[chatID] = true
     const video = await findVideo(msg.text)
     const vlen = video.duration.seconds
 
@@ -26,13 +34,16 @@ bot.on('text', async (msg) => {
             exec(`${youtube_dl_path} --extract-audio --audio-format mp3 "${video.url}" -o "${path}"`, (err, stdout, stderr) => {
                 bot.sendAudio(chatID, path, { fileName: `${video.title}.mp3` })
                     .then(_ => {
+                        status[chatID] = false
                         exec(`rm "${path}"`)
                     })
             })
         })
     } 
-    else
+    else {
+        status[chatID] = false
         bot.sendMessage(chatID, `Your music is more than 20 Minutes.`)
+    }
 })
 
 bot.start()
