@@ -24,9 +24,7 @@ bot.on('text', async (msg) => {
             exec(`${youtube_dl_path} --extract-audio --audio-format mp3 "${video.url}" -o "${path}"`, (err, stdout, stderr) => {
                 bot.sendAudio(chatID, path)
                     .then(_ => {
-                        exec(`rm ${path}`, (err, stdout, stderr) => {
-                            console.log(err, stdout, stderr);
-                        })
+                        exec(`rm "${path}"`)
                     })
             })
         })
