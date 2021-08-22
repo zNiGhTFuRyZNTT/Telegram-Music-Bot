@@ -18,7 +18,7 @@ bot.on('text', async (msg) => {
     const chatID = msg.chat.id
     const video = await findVideo(msg.text)
     const vlen = video.duration.seconds
-    
+
     if (vlen < 1200) {
         bot.sendMessage(chatID, `Downloading ${video.title}...`)
         .then(async _ => {
@@ -31,7 +31,7 @@ bot.on('text', async (msg) => {
             })
         })
     } else {
-        bot.sendMessage(chatID, `Your query is more than 20 Minutes\n متاسفانه مدت زمان موزیک درخواستی شما بیش از 20 دقیقه است`)
+        bot.sendMessage(chatID, `Your music is more than 20 Minutes.`)
     }
 })
 
