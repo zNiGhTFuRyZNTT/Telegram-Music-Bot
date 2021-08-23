@@ -53,22 +53,26 @@ bot.on('text', async (msg) => {
     }
 
     status[chatID] = true
-    if (isUrl) {
-        var video = await ytdl.getInfo(msg.text)
-        video.title = video.videoDetails.title
-        video.url = video.videoDetails.video_url
-        video.seconds = video.videoDetails.lengthSeconds
+    try {
+        if (isUrl) {
+            var video = await ytdl.getInfo(msg.text)
+            video.title = video.videoDetails.title
+            video.url = video.videoDetails.video_url
+            video.seconds = video.videoDetails.lengthSeconds
+        }
+        else {
+            var video = await findVideo(msg.text)
+            video.seconds = video.duration.seconds
+        }
     }
-    else {
-        var video = await findVideo(msg.text)
-        video.seconds = video.duration.seconds
+    catch(e) {
+        if (!video) {
+            status[chatID] = false
+            bot.sendMessage(chatID, `Your requested music is not available.`)
+            return
+        }
     }
-    
-    if (!video) {
-        status[chatID] = false
-        bot.sendMessage(chatID, `Your requested music is not available.`)
-        return
-    }
+
     const vlen = video.seconds 
 
     if (vlen < 1200) {
