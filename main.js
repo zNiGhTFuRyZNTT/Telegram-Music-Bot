@@ -1,6 +1,7 @@
 const TeleBot = require('telebot')
 const searchYT = require('yt-search')
 const { exec } = require('child_process')
+const ytdl = require('ytdl-core')
 require('dotenv').config()
 
 const youtube_dl_path = './youtube-dl'
@@ -33,6 +34,8 @@ async function findVideo(query) {
 
 bot.on(['/start', '/hello'], (msg) => msg.reply.text('Welcome!'))
 
+bot.on('/donate', (msg) => msg.reply.text('https://www.paypal.me/znightfuryz'))
+
 bot.on('text', async (msg) => {
     const isUrl = msg.text.match(url_regex)
     if (isUrl) {
@@ -46,7 +49,13 @@ bot.on('text', async (msg) => {
     }
 
     status[chatID] = true
-    const video = await findVideo(msg.text)
+    if (isUrl) {
+        const video = await ytdl.getInfo(msg.text)
+    }
+    else {
+        const video = await findVideo(msg.text)
+    }
+
     if (!video) {
         status[chatID] = false
         bot.sendMessage(chatID, `Your requested music is not available.`)
