@@ -7,6 +7,8 @@ const youtube_dl_path = './youtube-dl'
 const token = process.env.API_KEY
 const bot = new TeleBot(token)
 const status = []
+var url_expression = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi
+var url_regex = new RegExp(url_expression)
 
 async function findVideo(query) {
     const result = await searchYT(query)
@@ -16,6 +18,7 @@ async function findVideo(query) {
 bot.on(['/start', '/hello'], (msg) => msg.reply.text('Welcome!'))
 
 bot.on('text', async (msg) => {
+    const isUrl = msg.text.match(url_regex)
     const chatID = msg.chat.id
 
     if (status[chatID]) {
@@ -30,7 +33,7 @@ bot.on('text', async (msg) => {
         return
     }
     const vlen = video.duration.seconds
-    
+
     if (vlen < 1200) {
         bot.sendMessage(chatID, `Downloading ${video.title}...`)
         .then(async _ => {
