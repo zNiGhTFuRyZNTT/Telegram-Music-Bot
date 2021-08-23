@@ -41,6 +41,7 @@ bot.on('text', async (msg) => {
 
     const chatID = msg.chat.id
     if (status[chatID]) {
+        status[chatID] = false
         bot.sendMessage(chatID, `Please wait until your last query is completed.`)
         return
     }
