@@ -37,16 +37,16 @@ bot.on(['/start', '/hello'], (msg) => msg.reply.text('Welcome!'))
 bot.on('/donate', (msg) => msg.reply.text('https://www.paypal.me/znightfuryz'))
 
 bot.on('text', async (msg) => {
+    const chatID = msg.chat.id
     const isUrl = msg.text.match(url_regex)
     if (isUrl) {
         msg.text = getYoutubeUrlId(msg.text)
         if (!msg.text) {
-            bot.sendMessage(chatID, 'Invalid URL.')
+            bot.sendMessage(chatID, 'Invalid URL')
             return
         }
     }
 
-    const chatID = msg.chat.id
     if (status[chatID]) {
         bot.sendMessage(chatID, `Please wait until your last query is completed.`)
         return
