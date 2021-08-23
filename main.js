@@ -42,13 +42,13 @@ bot.on('text', async (msg) => {
     if (isUrl) {
         msg.text = getYoutubeUrlId(msg.text)
         if (!msg.text) {
-            bot.sendMessage(chatID, 'Invalid URL')
+            bot.sendMessage(chatID, '[❗] Invalid URL')
             return
         }
     }
 
     if (status[chatID]) {
-        bot.sendMessage(chatID, `Please wait until your last query is completed.`)
+        bot.sendMessage(chatID, `[❗] Please wait until your last query is completed.`)
         return
     }
 
@@ -68,7 +68,7 @@ bot.on('text', async (msg) => {
     catch(e) {
         if (!video) {
             status[chatID] = false
-            bot.sendMessage(chatID, `Your requested music is not available.`)
+            bot.sendMessage(chatID, `[❗] Your requested music is not available.`)
             return
         }
     }
@@ -76,7 +76,7 @@ bot.on('text', async (msg) => {
     const vlen = video.seconds 
 
     if (vlen < 3000) {
-        bot.sendMessage(chatID, `Downloading ${video.title}...`)
+        bot.sendMessage(chatID, `[🍑] Downloading ${video.title}...`) 
         .then(async _ => {
             const path = `storage/${chatID}.mp3`
             exec(`${youtube_dl_path} --extract-audio --audio-format mp3 "${video.url}" -o "${path}"`, (err, stdout, stderr) => {
@@ -86,12 +86,17 @@ bot.on('text', async (msg) => {
                             status[chatID] = false
                         })
                     })
+                    .catch(err => {
+                        console.log(err)
+                        status[chatID] = false
+                        bot.sendMessage(chatID, `[❗] Something went wrong, Please try again...`)
+                    })
             })
         })
     } 
     else {
         status[chatID] = false
-        bot.sendMessage(chatID, `Your music is more than 20 Minutes.`)
+        bot.sendMessage(chatID, `[❗] Your music is more than 20 Minutes.`)
     }
 })
 
