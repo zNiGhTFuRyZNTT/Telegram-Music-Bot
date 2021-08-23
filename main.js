@@ -25,8 +25,12 @@ bot.on('text', async (msg) => {
 
     status[chatID] = true
     const video = await findVideo(msg.text)
+    if (!video) {
+        bot.sendMessage(chatID, `Your requested music is not available.`)
+        return
+    }
     const vlen = video.duration.seconds
-
+    
     if (vlen < 1200) {
         bot.sendMessage(chatID, `Downloading ${video.title}...`)
         .then(async _ => {
