@@ -10,6 +10,22 @@ const status = []
 var url_expression = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi
 var url_regex = new RegExp(url_expression)
 
+function getYoutubeUrlId(url) {
+    const urlObject = new URL(url)
+    let urlOrigin = urlObject.origin
+    let urlPath = urlObject.pathname
+
+    if (urlOrigin.search('youtu.be') > -1) {
+        return urlPath.substr(1)
+    }
+
+    if (urlPath.search('embed') > -1) {
+        return urlPath.substr(7)
+    }
+
+    return urlObject.searchParams.get('v')
+}
+
 async function findVideo(query) {
     const result = await searchYT(query)
     return (result.videos.length > 1) ? result.videos[0] : null
@@ -19,8 +35,11 @@ bot.on(['/start', '/hello'], (msg) => msg.reply.text('Welcome!'))
 
 bot.on('text', async (msg) => {
     const isUrl = msg.text.match(url_regex)
-    const chatID = msg.chat.id
+    if (isUrl) {
+        msg.text = getYoutubeUrlId(msg.text)
+    }
 
+    const chatID = msg.chat.id
     if (status[chatID]) {
         bot.sendMessage(chatID, `Please wait until your last query is completed.`)
         return
@@ -29,6 +48,7 @@ bot.on('text', async (msg) => {
     status[chatID] = true
     const video = await findVideo(msg.text)
     if (!video) {
+        status[chatID] = false
         bot.sendMessage(chatID, `Your requested music is not available.`)
         return
     }
