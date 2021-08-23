@@ -40,6 +40,10 @@ bot.on('text', async (msg) => {
     const isUrl = msg.text.match(url_regex)
     if (isUrl) {
         msg.text = getYoutubeUrlId(msg.text)
+        if (!msg.text) {
+            bot.sendMessage(chatID, 'Invalid URL.')
+            return
+        }
     }
 
     const chatID = msg.chat.id
