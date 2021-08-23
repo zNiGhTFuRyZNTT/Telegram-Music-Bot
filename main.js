@@ -75,10 +75,10 @@ bot.on('text', async (msg) => {
 
     const vlen = video.seconds 
 
-    if (vlen < 1200) {
+    if (vlen < 3000) {
         bot.sendMessage(chatID, `Downloading ${video.title}...`)
         .then(async _ => {
-            const path = `storage/${video.title}-${chatID}.mp3`
+            const path = `storage/${chatID}.mp3`
             exec(`${youtube_dl_path} --extract-audio --audio-format mp3 "${video.url}" -o "${path}"`, (err, stdout, stderr) => {
                 bot.sendAudio(chatID, path, { fileName: `${video.title}.mp3` })
                     .then(_ => {
