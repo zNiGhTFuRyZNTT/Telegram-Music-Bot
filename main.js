@@ -96,7 +96,7 @@ bot.on('text', async (msg) => {
     } 
     else {
         status[chatID] = false
-        bot.sendMessage(chatID, `[❗] Your music is more than 20 Minutes.`)
+        bot.sendMessage(chatID, `[❗] Your music is more than 50 Minutes.`)
     }
 })
 
