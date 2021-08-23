@@ -17,8 +17,9 @@ bot.on(['/start', '/hello'], (msg) => msg.reply.text('Welcome!'))
 bot.on('text', async (msg) => {
     const chatID = msg.chat.id
     const video = await findVideo(msg.text)
-
-    bot.sendMessage(chatID, `Downloading ${video.title}...`)
+    const vlen = video.duration.seconds
+    if (vlen < 1200) {
+        bot.sendMessage(chatID, `Downloading ${video.title}...`)
         .then(async _ => {
             const path = `storage/${video.title}.mp3`
             exec(`${youtube_dl_path} --extract-audio --audio-format mp3 "${video.url}" -o "${path}"`, (err, stdout, stderr) => {
@@ -28,6 +29,10 @@ bot.on('text', async (msg) => {
                     })
             })
         })
+    } else {
+        bot.sendMessage(chatID, `Your query is more than 20 Minutes\n متاسفانه مدت زمان موزیک درخواستی شما بیش از 20 دقیقه است`)
+    }
+
 })
 
 bot.start()
