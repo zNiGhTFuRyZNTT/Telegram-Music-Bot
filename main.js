@@ -50,18 +50,22 @@ bot.on('text', async (msg) => {
 
     status[chatID] = true
     if (isUrl) {
-        const video = await ytdl.getInfo(msg.text)
+        var video = await ytdl.getInfo(msg.text)
+        video.title = video.videoDetails.title
+        video.url = video.videoDetails.video_url
+        video.seconds = video.videoDetails.lengthSeconds
     }
     else {
-        const video = await findVideo(msg.text)
+        var video = await findVideo(msg.text)
+        video.seconds = video.duration.seconds
     }
-
+    
     if (!video) {
         status[chatID] = false
         bot.sendMessage(chatID, `Your requested music is not available.`)
         return
     }
-    const vlen = video.duration.seconds
+    const vlen = video.seconds 
 
     if (vlen < 1200) {
         bot.sendMessage(chatID, `Downloading ${video.title}...`)
