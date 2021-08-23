@@ -1,4 +1,4 @@
 node_modules
 storage/*
 !storage/empty
-youtube-dl.exe
+package-lock.json
