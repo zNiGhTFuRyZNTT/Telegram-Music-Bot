@@ -75,7 +75,7 @@ bot.on('text', async (msg) => {
 
     const vlen = video.seconds 
 
-    if (vlen < 3000) {
+    if (vlen < 2400) {
         bot.sendMessage(chatID, `[🍑] Downloading ${video.title}...`) 
         .then(async _ => {
             const path = `storage/${chatID}.mp3`
