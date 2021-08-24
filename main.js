@@ -27,6 +27,15 @@ function getYoutubeUrlId(url) {
     return urlObject.searchParams.get('v')
 }
 
+function cleanTitle(title) {
+    title = title.replace(/`/g, " ")
+    title = title.replace(/'/g, " ")
+    title = title.replace(/"/g, " ")
+    title = title.replace(/\//g, " ")
+    title = title.replace(/\\/g, " ")
+    return title
+}
+
 function cleanUp(chatID) {
     exec(`rm storage/${chatID}*`, () => {
         status[chatID] = false
@@ -93,7 +102,7 @@ bot.on('text', async (msg) => {
             const path = `storage/${chatID}-${Date.now()}.mp3`
             const yt_process = exec(`${youtube_dl_path} --extract-audio --audio-format mp3 "${video.url}" -o "${path}"`, (err, stdout, stderr) => {
                 clearTimeout(dl_timeout)
-                bot.sendAudio(chatID, path, { fileName: `${video.title.replace(/[~`!@#$%^&*()+={}\[\];:\'\"<>.,\/\\\?-_]/g, '')}.mp3` })
+                bot.sendAudio(chatID, path, { fileName: `${cleanTitle(video.title)}.mp3` })
                     .then(_ => {
                         cleanUp(chatID)
                     })
