@@ -78,11 +78,11 @@ bot.on('text', async (msg) => {
     if (vlen < 2400) {
         bot.sendMessage(chatID, `[🍑] Downloading ${video.title}...`) 
         .then(async _ => {
-            const path = `storage/${chatID}.mp3`
+            const path = `storage/${chatID}-${Date.now()}.mp3`
             exec(`${youtube_dl_path} --extract-audio --audio-format mp3 "${video.url}" -o "${path}"`, (err, stdout, stderr) => {
                 bot.sendAudio(chatID, path, { fileName: `${video.title}.mp3` })
                     .then(_ => {
-                        exec(`rm "${path}"`, () => {
+                        exec(`rm storage/${chatID}*`, () => {
                             status[chatID] = false
                         })
                     })
