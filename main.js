@@ -84,13 +84,21 @@ bot.on('text', async (msg) => {
     if (vlen < 2400) {
         bot.sendMessage(chatID, `[🍑] Downloading ${video.title}...`) 
         .then(async _ => {
+            const dl_timeout = setTimeout(() => {
+                yt_process.kill('SIGKILL')
+                cleanUp(chatID)
+                bot.sendMessage(chatID, `[❗] Download took more than 20 seconds, Please try again...`)
+            }, 20000)
+
             const path = `storage/${chatID}-${Date.now()}.mp3`
-            exec(`${youtube_dl_path} --extract-audio --audio-format mp3 "${video.url}" -o "${path}"`, (err, stdout, stderr) => {
+            const yt_process = exec(`${youtube_dl_path} --extract-audio --audio-format mp3 "${video.url}" -o "${path}"`, (err, stdout, stderr) => {
                 bot.sendAudio(chatID, path, { fileName: `${video.title.replace(/[~`!@#$%^&*()+={}\[\];:\'\"<>.,\/\\\?-_]/g, '')}.mp3` })
                     .then(_ => {
+                        clearTimeout(dl_timeout)
                         cleanUp(chatID)
                     })
                     .catch(err => {
+                        clearTimeout(dl_timeout)
                         cleanUp(chatID)
                         bot.sendMessage(chatID, `[❗] Something went wrong, Please try again...`)
                     })
