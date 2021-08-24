@@ -5,7 +5,7 @@ url = sys.argv[1]
 chatID = sys.argv[2]
 msgID = sys.argv[3]
 
-def main(url, chatID, msgID, path):
+def main(url, chatID, msgID):
     yt = YouTube(url)
     video = yt.streams.filter(only_audio=True).first()
     downloaded_file = video.download("storage/")
