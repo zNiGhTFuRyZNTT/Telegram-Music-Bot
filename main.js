@@ -27,6 +27,12 @@ function getYoutubeUrlId(url) {
     return urlObject.searchParams.get('v')
 }
 
+function cleanUp(chatID) {
+    exec(`rm storage/${chatID}*`, () => {
+        status[chatID] = false
+    })
+}
+
 async function findVideo(query) {
     const result = await searchYT(query)
     return (result.videos.length > 1) ? result.videos[0] : null
@@ -67,7 +73,7 @@ bot.on('text', async (msg) => {
     }
     catch(e) {
         if (!video) {
-            status[chatID] = false
+            cleanUp(chatID)
             bot.sendMessage(chatID, `[❗] Your requested music is not available.`)
             return
         }
@@ -80,22 +86,19 @@ bot.on('text', async (msg) => {
         .then(async _ => {
             const path = `storage/${chatID}-${Date.now()}.mp3`
             exec(`${youtube_dl_path} --extract-audio --audio-format mp3 "${video.url}" -o "${path}"`, (err, stdout, stderr) => {
-                bot.sendAudio(chatID, path, { fileName: `${video.title}.mp3` })
+                bot.sendAudio(chatID, path, { fileName: `${video.title.replace(/[~`!@#$%^&*()+={}\[\];:\'\"<>.,\/\\\?-_]/g, '')}.mp3` })
                     .then(_ => {
-                        exec(`rm storage/${chatID}*`, () => {
-                            status[chatID] = false
-                        })
+                        cleanUp(chatID)
                     })
                     .catch(err => {
-                        console.log(err)
-                        status[chatID] = false
+                        cleanUp(chatID)
                         bot.sendMessage(chatID, `[❗] Something went wrong, Please try again...`)
                     })
             })
         })
     } 
     else {
-        status[chatID] = false
+        cleanUp(chatID)
         bot.sendMessage(chatID, `[❗] Your music is more than 40 Minutes.`)
     }
 })
