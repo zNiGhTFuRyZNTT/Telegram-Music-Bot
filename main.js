@@ -92,13 +92,12 @@ bot.on('text', async (msg) => {
 
             const path = `storage/${chatID}-${Date.now()}.mp3`
             const yt_process = exec(`${youtube_dl_path} --extract-audio --audio-format mp3 "${video.url}" -o "${path}"`, (err, stdout, stderr) => {
+                clearTimeout(dl_timeout)
                 bot.sendAudio(chatID, path, { fileName: `${video.title.replace(/[~`!@#$%^&*()+={}\[\];:\'\"<>.,\/\\\?-_]/g, '')}.mp3` })
                     .then(_ => {
-                        clearTimeout(dl_timeout)
                         cleanUp(chatID)
                     })
                     .catch(err => {
-                        clearTimeout(dl_timeout)
                         cleanUp(chatID)
                         bot.sendMessage(chatID, `[❗] Something went wrong, Please try again...`)
                     })
