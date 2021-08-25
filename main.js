@@ -4,7 +4,6 @@ const { exec } = require('child_process')
 const ytdl = require('ytdl-core')
 require('dotenv').config()
 
-const youtube_dl_path = './youtube-dl'
 const token = process.env.API_KEY
 const bot = new TeleBot(token)
 const status = []
@@ -99,8 +98,8 @@ bot.on('text', async (msg) => {
                 bot.sendMessage(chatID, `[❗] Download took more than 20 seconds, Please try again...`)
             }, 20000)
 
-            const path = `storage/${chatID}-${Date.now()}.mp3`
-            const yt_process = exec(`${youtube_dl_path} --extract-audio --audio-format mp3 "${video.url}" -o "${path}"`, (err, stdout, stderr) => {
+            const path = `storage/${chatID}-${msg.message_id}.mp3`
+            const yt_process = exec(`python3 downloader.py "${video.url}" ${chatID} ${msg.message_id}`, (err, stdout, stderr) => {
                 clearTimeout(dl_timeout)
                 bot.sendAudio(chatID, path, { fileName: `${cleanTitle(video.title)}.mp3` })
                     .then(_ => {
