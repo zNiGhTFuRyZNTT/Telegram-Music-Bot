@@ -7,7 +7,7 @@ msgID = sys.argv[3]
 
 def main(url, chatID, msgID):
     yt = YouTube(url)
-    video = yt.streams.filter(only_audio=True).first()
+    video = yt.streams.filter(only_audio=True).asc()[-1]
     downloaded_file = video.download()
     base, ext = os.path.splitext(downloaded_file)
     new_file = f"storage/{chatID}-{msgID}.mp3"
