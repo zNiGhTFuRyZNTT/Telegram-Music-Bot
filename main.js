@@ -99,7 +99,7 @@ bot.on('text', async (msg) => {
             }, 20000)
 
             const path = `storage/${chatID}-${msg.message_id}.mp3`
-            const yt_process = exec(`python3 downloader.py "${video.url}" ${chatID} ${msg.message_id}`, (err, stdout, stderr) => {
+            const yt_process = exec(`python3 downloader.py "${video.url}" "${chatID}" "${msg.message_id}"`, (err, stdout, stderr) => {
                 clearTimeout(dl_timeout)
                 bot.sendAudio(chatID, path, { fileName: `${cleanTitle(video.title)}.mp3` })
                     .then(_ => {
