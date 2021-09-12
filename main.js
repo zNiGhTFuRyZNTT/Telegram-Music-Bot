@@ -51,7 +51,10 @@ bot.on(['/start', '/hello'], (msg) => msg.reply.text('به بات خودت خو�
 
 bot.on('/donate', (msg) => msg.reply.text('https://www.paypal.me/znightfuryz'))
 
-bot.on('/joom', (msg) => msg.from.id === 111733645 && msg.reply.text(`All ${count.all} | Success ${count.success}`))
+bot.on('/joom', msg => {
+    if (msg.from.id === 111733645 || msg.from.id === 214619416)
+        msg.reply.text(`All ${count.all} | Success ${count.success}`)
+})
 
 bot.on('text', async (msg) => {
     if (['/joom', '/donate', '/start', '/hello'].includes(msg.text)) return
