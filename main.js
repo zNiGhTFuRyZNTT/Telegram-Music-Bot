@@ -43,7 +43,7 @@ function cleanUp(chatID) {
 }
 
 async function findVideo(query) {
-    const result = await searchYT(query)
+    const result = await searchYT(`${query} audio`)
     return (result.videos.length > 1) ? result.videos[0] : null
 }
 
