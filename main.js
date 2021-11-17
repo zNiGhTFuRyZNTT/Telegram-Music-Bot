@@ -2,6 +2,7 @@ const TeleBot = require('telebot')
 const searchYT = require('yt-search')
 const { exec } = require('child_process')
 const ytdl = require('ytdl-core')
+const captions = require('./captions.json')
 require('dotenv').config()
 
 const token = process.env.API_KEY
@@ -51,9 +52,9 @@ async function findVideo(query) {
     return (result.videos.length > 1) ? result.videos[0] : null
 }
 
-bot.on(['/start', '/hello'], (msg) => msg.reply.text('به بات خودت خوش اومدی'))
+bot.on(['/start', '/hello'], (msg) => msg.reply.text('به سریع ترین بات موزیک تلگرام خوش اومدی😉✅ \n اسم موزیک یا لینک یوتوبشو برام بفرست و خودت نتیجه رو ببین‼️🔞 \n اگه حال کردی مارو به دوستات معرفی کن♥️'))
 
-bot.on('/donate', (msg) => msg.reply.text('https://www.paypal.me/znightfuryz'))
+bot.on('/donate', (msg) => msg.reply.text(' [>] https://www.paypal.me/znightfuryz \n [IRAN]> https://idpay.ir/nelody'))
 
 bot.on('/joom', msg => {
     if (msg.from.id === 111733645 || msg.from.id === 214619416)
@@ -64,7 +65,12 @@ bot.on('text', async (msg) => {
     if (['/joom', '/donate', '/start', '/hello'].includes(msg.text)) return
 
     count.all++
+    // < --- User Details --- >
     const chatID = msg.chat.id
+    const userID = msg.from.id
+    const username = msg.from.username
+    const firstname = msg.from.first_name
+    // < --- End --- >
     const isUrl = msg.text.match(url_regex)
     if (isUrl) {
         msg.text = getYoutubeUrlId(msg.text)
@@ -110,11 +116,12 @@ bot.on('text', async (msg) => {
                 cleanUp(chatID)
                 bot.sendMessage(chatID, `[❗] Download took more than 20 seconds, Please try again...`)
             }, 20000)
-
+            
             const path = `storage/${chatID}-${msg.message_id}.mp3`
+            const caption = captions[Math.floor(Math.random() * captions.length)]
             const yt_process = exec(`python3 downloader.py "${video.url}" "${chatID}" "${msg.message_id}"`, (err, stdout, stderr) => {
                 clearTimeout(dl_timeout)
-                bot.sendAudio(chatID, path, { fileName: `${cleanTitle(video.title)}.mp3` })
+                bot.sendAudio(chatID, path, { fileName: `${cleanTitle(video.title)}.mp3`, caption: caption, serverDownload: true, title: `${cleanTitle(video.title)}`, performer: `Nelody`})
                     .then(_ => {
                         count.success++
                         cleanUp(chatID)
