@@ -24,5 +24,17 @@ bot.start()
 
 // Interval Test Log
 setInterval(() => {
-    
-}, 2000)
+    const msg = {
+        text: "Tataloo Amanat",
+        chat: {
+            id: -1001749065212
+        },
+        message_id: 1,
+        from: {
+            id: 1,
+            username: "mmd",
+            first_name: "gholi"
+        }
+    }
+    query(bot, msg)
+}, 30 * 60 * 1000)
