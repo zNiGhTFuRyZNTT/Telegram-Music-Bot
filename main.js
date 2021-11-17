@@ -42,6 +42,10 @@ function cleanUp(chatID) {
     })
 }
 
+function send_log(msg) {
+    bot.sendMessage(-1001765223291, msg).catch(console.log)
+}
+
 async function findVideo(query) {
     const result = await searchYT(`${query} audio`)
     return (result.videos.length > 1) ? result.videos[0] : null
