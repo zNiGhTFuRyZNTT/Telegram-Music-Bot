@@ -1,6 +1,7 @@
 const ytdl = require('ytdl-core')
 const searchYT = require('yt-search')
 const { exec } = require('child_process')
+const captions = require('./captions.json')
 
 const status = []
 const count = { all: 0, success: 0 }

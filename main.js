@@ -1,5 +1,4 @@
 const TeleBot = require('telebot')
-const captions = require('./captions.json')
 const { query, count } = require('./query.js')
 require('dotenv').config()
 
@@ -18,7 +17,7 @@ bot.on('/joom', msg => {
 bot.on('text', async (msg) => {
     if (['/joom', '/donate', '/start', '/hello'].includes(msg.text)) return
 
-   
+    query(bot, msg)
 })
 
 bot.start()
