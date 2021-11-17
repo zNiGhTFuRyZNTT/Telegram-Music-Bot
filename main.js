@@ -1,6 +1,4 @@
 const TeleBot = require('telebot')
-const searchYT = require('yt-search')
-const ytdl = require('ytdl-core')
 const captions = require('./captions.json')
 const { query, count } = require('./query.js')
 require('dotenv').config()

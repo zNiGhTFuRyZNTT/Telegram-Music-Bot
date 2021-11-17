@@ -1,3 +1,5 @@
+const ytdl = require('ytdl-core')
+const searchYT = require('yt-search')
 const { exec } = require('child_process')
 
 const status = []
@@ -45,7 +47,7 @@ function cleanUp(chatID) {
     })
 }
 
-function query(bot, msg) {
+async function query(bot, msg) {
     count.all++
     // < --- User Details --- >
     const chatID = msg.chat.id
