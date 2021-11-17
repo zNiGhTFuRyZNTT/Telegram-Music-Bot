@@ -1,3 +1,50 @@
+const { exec } = require('child_process')
+
+const status = []
+const count = { all: 0, success: 0 }
+const url_expression = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi
+const url_regex = new RegExp(url_expression)
+
+function getYoutubeUrlId(url) {
+    const urlObject = new URL(url)
+    let urlOrigin = urlObject.origin
+    let urlPath = urlObject.pathname
+    
+    if (urlOrigin.search('youtu.be') > -1) {
+        return urlPath.substr(1)
+    }
+
+    if (urlPath.search('embed') > -1) {
+        return urlPath.substr(7)
+    }
+
+    return urlObject.searchParams.get('v')
+}
+
+function cleanTitle(title) {
+    title = title.replace(/`/g, " ")
+    title = title.replace(/'/g, " ")
+    title = title.replace(/"/g, " ")
+    title = title.replace(/\//g, " ")
+    title = title.replace(/\\/g, " ")
+    return title
+}
+
+function send_log(msg) {
+    bot.sendMessage(-1001765223291, msg).catch(console.log)
+}
+
+async function findVideo(query) {
+    const result = await searchYT(`${query} audio`)
+    return (result.videos.length > 1) ? result.videos[0] : null
+}
+
+function cleanUp(chatID) {
+    exec(`rm storage/${chatID}*`, () => {
+        status[chatID] = false
+    })
+}
+
 function query(bot, msg) {
     count.all++
     // < --- User Details --- >
@@ -76,5 +123,6 @@ function query(bot, msg) {
 }
 
 module.exports = {
-    query: query
+    query: query,
+    count: count
 }
