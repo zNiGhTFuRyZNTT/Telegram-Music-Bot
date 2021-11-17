@@ -122,6 +122,7 @@ bot.on('text', async (msg) => {
                     .catch(err => {
                         cleanUp(chatID)
                         bot.sendMessage(chatID, `[❗] Something went wrong, Please try again...`)
+                        send_log(`${err}`)
                     })
             })
         })
