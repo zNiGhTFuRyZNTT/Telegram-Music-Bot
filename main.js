@@ -1,4 +1,5 @@
 const TeleBot = require('telebot')
+const searchYT = require('yt-search')
 const { query, count } = require('./query.js')
 require('dotenv').config()
 
@@ -19,6 +20,29 @@ bot.on('text', async (msg) => {
     if (msg.chat.id === -1001749065212 || msg.chat.id === -1001765223291) return
 
     query(bot, msg)
+})
+
+bot.on('inlineQuery', async msg => {
+    const answers = bot.answerList(msg.id)
+    const result = await searchYT(`${msg.query} audio`)
+    
+    if (result.videos.length > 1) {
+        const video = result.videos[0]
+
+        answers.addArticle({
+            id: 1,
+            title: video.title,
+            description: video.description,
+            thumb_url: video.thumbnail,
+            message_text: `[🍑] Downloading ${video.title}...`
+        })
+    
+        bot.answerQuery(answers)
+    }
+})
+
+bot.on('chosenInlineResult', msg => {
+    console.log(msg);
 })
 
 bot.start()
