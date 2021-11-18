@@ -1,6 +1,5 @@
 const TeleBot = require('telebot')
-const { exec } = require('child_process')
-const { send_log, query, count } = require('./query.js')
+const { query, count } = require('./query.js')
 require('dotenv').config()
 
 const token = process.env.API_KEY
