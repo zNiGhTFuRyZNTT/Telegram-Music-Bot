@@ -1,5 +1,5 @@
 const sqlite3 = require('sqlite3').verbose()
-const db = new sqlite3.Database('./data.sqlite3', sqlite3.OPEN_READWRITE , err => {
+const db = new sqlite3.Database('./nelody.sqlite3', sqlite3.OPEN_READWRITE , err => {
     if (err)
         return console.error(err.message)
     console.log("[Database] > Connected to SQLite Database")
