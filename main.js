@@ -25,7 +25,7 @@ bot.start()
 
 // Interval Test Log
 setInterval(() => {
-    const chatID = 1001749065212
+    const chatID = -1001749065212
     const time = new Date().toUTCString()
     const video_url = "https://www.youtube.com/watch?v=YLk3sNjrutA"
 
@@ -36,7 +36,7 @@ setInterval(() => {
             send_log(bot, `Error: ${time}\n\n${err}`)
         else {
             exec(`rm storage/${chatID}*`, () => {
-                send_log(bot, `Heartbeat: ${time}`)
+                bot.sendMessage(chatID, `Heartbeat: ${time}`)
             })
         }
     })
