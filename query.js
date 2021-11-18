@@ -33,7 +33,7 @@ function cleanTitle(title) {
     return title
 }
 
-function send_log(msg) {
+function send_log(bot, msg) {
     bot.sendMessage(-1001765223291, msg).catch(console.log)
 }
 
@@ -114,7 +114,7 @@ async function query(bot, msg) {
                     .catch(err => {
                         cleanUp(chatID)
                         bot.sendMessage(chatID, `[❗] Something went wrong, Please try again...`)
-                        send_log(`${err}`)
+                        send_log(bot, `${err}`)
                     })
             })
         })
@@ -126,6 +126,7 @@ async function query(bot, msg) {
 }
 
 module.exports = {
+    send_log: send_log,
     query: query,
     count: count
 }

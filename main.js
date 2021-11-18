@@ -1,5 +1,6 @@
 const TeleBot = require('telebot')
-const { query, count } = require('./query.js')
+const { exec } = require('child_process')
+const { send_log, query, count } = require('./query.js')
 require('dotenv').config()
 
 const token = process.env.API_KEY
@@ -24,17 +25,19 @@ bot.start()
 
 // Interval Test Log
 setInterval(() => {
-    const msg = {
-        text: "Tataloo Amanat",
-        chat: {
-            id: -1001749065212
-        },
-        message_id: 1,
-        from: {
-            id: 1,
-            username: "mmd",
-            first_name: "gholi"
+    const chatID = 1001749065212
+    const time = new Date().toUTCString()
+    const video_url = "https://www.youtube.com/watch?v=YLk3sNjrutA"
+
+    exec(`python3 downloader.py "${video_url}" "${chatID}" "${chatID}"`, (err, stdout, stderr) => {
+        if (stderr)
+            send_log(bot, `Error: ${time}\n\n${stderr}`)
+        else if (err)
+            send_log(bot, `Error: ${time}\n\n${err}`)
+        else {
+            exec(`rm storage/${chatID}*`, () => {
+                send_log(bot, `Heartbeat: ${time}`)
+            })
         }
-    }
-    query(bot, msg)
+    })
 }, 30 * 60 * 1000)
