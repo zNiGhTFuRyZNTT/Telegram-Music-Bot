@@ -33,11 +33,11 @@ function addUser(username, first_name, userID, chatID) {
 
 function updateAll(user_id) {
     return new Promise((resolve, reject) => {
-        db.get(`SELECT all FROM users WHERE user_id = ?`, user_id, (err, user) => {
+        db.get(`SELECT \"all\" FROM users WHERE user_id = ?`, user_id, (err, user) => {
             if (err) reject(err)
             
             if (user) 
-                db.run("UPDATE users SET all = ? WHERE user_id = ?", [++user.all, user_id], err => {
+                db.run("UPDATE users SET \"all\" = ? WHERE user_id = ?", [++user.all, user_id], err => {
                     if (err) reject(err)
                     resolve()
                 }) 
