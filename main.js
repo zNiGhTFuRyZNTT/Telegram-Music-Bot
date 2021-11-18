@@ -27,14 +27,14 @@ bot.on('inlineQuery', async msg => {
     const result = await searchYT(`${msg.query} audio`)
     
     if (result.videos.length > 1) {
-        const video = result.videos[0]
-
-        answers.addArticle({
-            id: 1,
-            title: video.title,
-            description: video.description,
-            thumb_url: video.thumbnail,
-            message_text: `[🍑] Downloading ${video.title}...`
+        result.videos.forEach((v, i) => {
+            answers.addArticle({
+                id: i,
+                title: v.title,
+                description: v.description,
+                thumb_url: v.thumbnail,
+                message_text: `[🍑] Downloading ${v.title}...`
+            })
         })
     
         bot.answerQuery(answers)
