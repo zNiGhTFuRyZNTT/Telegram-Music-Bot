@@ -1,6 +1,6 @@
 const TeleBot = require('telebot')
 const searchYT = require('yt-search')
-const { query, count } = require('./query.js')
+const { send_log, query, count } = require('./query.js')
 require('dotenv').config()
 
 const token = process.env.API_KEY
@@ -38,6 +38,7 @@ bot.on('inlineQuery', async msg => {
         })
     
         bot.answerQuery(answers)
+            .catch((e) => send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${e}`))
     }
 })
 
