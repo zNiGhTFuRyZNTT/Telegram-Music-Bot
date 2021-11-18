@@ -38,7 +38,7 @@ bot.on('inlineQuery', async msg => {
         })
     
         bot.answerQuery(answers)
-            .catch((e) => send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${e}`))
+            .catch((e) => send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${e.description}`))
     }
 })
 
