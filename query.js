@@ -48,7 +48,7 @@ function cleanUp(chatID) {
     })
 }
 
-async function query(bot, msg) {
+async function query(bot, msg, test=false) {
     count.all++
     // < --- User Details --- >
     const chatID = msg.chat.id
@@ -106,7 +106,7 @@ async function query(bot, msg) {
             const caption = captions[Math.floor(Math.random() * captions.length)]
             const yt_process = exec(`python3 downloader.py "${video.url}" "${chatID}" "${msg.message_id}"`, (err, stdout, stderr) => {
                 clearTimeout(dl_timeout)
-                bot.sendAudio(chatID, path, { fileName: `${cleanTitle(video.title)}.mp3`, caption: caption, serverDownload: true, title: `${cleanTitle(video.title)}`, performer: `Nelody`})
+                bot.sendAudio(chatID, path, { fileName: test ? new Date().toUTCString() : `${cleanTitle(video.title)}.mp3`, caption: caption, serverDownload: true, title: `${cleanTitle(video.title)}`, performer: `Nelody`})
                     .then(_ => {
                         count.success++
                         cleanUp(chatID)
