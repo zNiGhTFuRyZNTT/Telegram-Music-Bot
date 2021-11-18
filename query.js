@@ -114,7 +114,7 @@ async function query(bot, msg) {
                     .catch(err => {
                         cleanUp(chatID)
                         bot.sendMessage(chatID, `[❗] Something went wrong, Please try again...`)
-                        send_log(bot, `${err}`)
+                        send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${err}`)
                     })
             })
         })
