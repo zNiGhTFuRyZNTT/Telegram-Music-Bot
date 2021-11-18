@@ -28,13 +28,14 @@ bot.on('inlineQuery', async msg => {
     
     if (result.videos.length > 1) {
         result.videos.forEach((v, i) => {
-            answers.addArticle({
-                id: i,
-                title: v.title,
-                description: v.description,
-                thumb_url: v.thumbnail,
-                message_text: `[🍑] Downloading ${v.title}...`
-            })
+            v.seconds > 2400 &&
+                answers.addArticle({
+                    id: i,
+                    title: v.title,
+                    description: v.description,
+                    thumb_url: v.thumbnail,
+                    message_text: `[🍑] Downloading ${v.title}...`
+                })
         })
     
         bot.answerQuery(answers)
