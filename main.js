@@ -17,6 +17,7 @@ bot.on('/joom', msg => {
 
 bot.on('text', async (msg) => {
     if (['/joom', '/donate', '/start', '/hello'].includes(msg.text)) return
+    if (msg.chat.id === -1001749065212 || msg.chat.id === -1001765223291) return
 
     query(bot, msg)
 })
