@@ -28,7 +28,7 @@ bot.on('inlineQuery', async msg => {
     
     if (result.videos.length > 1) {
         result.videos.forEach((v, i) => {
-            v.seconds > 2400 &&
+            v.seconds < 2400 &&
                 answers.addArticle({
                     id: i,
                     title: v.title,
