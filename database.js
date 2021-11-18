@@ -61,5 +61,7 @@ function updateSuccess(user_id) {
 
 module.exports = {
     addUser: addUser,
-    getUser: getUser
+    getUser: getUser,
+    updateAll: updateAll,
+    updateSuccess: updateSuccess
 }
