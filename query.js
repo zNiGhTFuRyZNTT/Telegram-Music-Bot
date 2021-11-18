@@ -1,6 +1,7 @@
 const ytdl = require('ytdl-core')
 const searchYT = require('yt-search')
 const { exec } = require('child_process')
+const database = require('./database')
 const captions = require('./captions.json')
 
 const status = []
@@ -50,12 +51,20 @@ function cleanUp(chatID) {
 
 async function query(bot, msg, test=false) {
     count.all++
+
     // < --- User Details --- >
     const chatID = msg.chat.id
     const userID = msg.from.id
     const username = msg.from.username
     const firstname = msg.from.first_name
     // < --- End --- >
+
+    database.addUser(username, firstname, userID, chatID)
+        .then(() => {
+            database.updateAll(userID)
+        })
+        .catch((e) => send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${e}`))
+
     const isUrl = msg.text.match(url_regex)
     if (isUrl) {
         msg.text = getYoutubeUrlId(msg.text)
@@ -110,6 +119,7 @@ async function query(bot, msg, test=false) {
                     .then(_ => {
                         count.success++
                         cleanUp(chatID)
+                        database.updateSuccess(userID)
                     })
                     .catch(err => {
                         cleanUp(chatID)
