@@ -59,11 +59,24 @@ function updateSuccess(user_id) {
     })
 }
 
-function countUsers() {
+function getStatus() {
     return new Promise((resolve, reject) => {
-        db.get(`SELECT COUNT(id) FROM users;`, (err, res) => {
+        db.get('SELECT COUNT(id) FROM users', (err, count) => {
             if (err) reject(err)
-            resolve(res['COUNT(id)'])
+
+            db.get('SELECT SUM(all) FROM users', (err, all) => {
+                if (err) reject(err)
+
+                db.get('SELECT SUM(success) FROM users', (err, success) => {
+                    if (err) reject(err)
+
+                    resolve({
+                        count: count['COUNT(id)'],
+                        all: all['SUM(all)'],
+                        success: success['SUM(success)']
+                    })
+                })
+            })
         })
     })
 }
@@ -71,7 +84,7 @@ function countUsers() {
 module.exports = {
     addUser: addUser,
     getUser: getUser,
-    countUsers: countUsers,
+    getStatus: getStatus,
     updateAll: updateAll,
     updateSuccess: updateSuccess
 }

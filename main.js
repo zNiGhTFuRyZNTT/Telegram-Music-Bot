@@ -1,6 +1,6 @@
 const TeleBot = require('telebot')
 const searchYT = require('yt-search')
-const { countUsers } = require('./database')
+const { getStatus } = require('./database')
 const { send_log, query, count } = require('./query.js')
 require('dotenv').config()
 
@@ -13,7 +13,7 @@ bot.on('/donate', (msg) => msg.reply.text(' [>] https://www.paypal.me/znightfury
 
 bot.on('/joom', msg => {
     if (msg.from.id === 111733645 || msg.from.id === 214619416)
-        countUsers()
+        getStatus()
             .then(res => msg.reply.text(`Users ${res} | Success ${count.success} | All ${count.all}`))
             .catch((e) => send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${e.description}`))
 })
