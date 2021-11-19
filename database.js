@@ -59,9 +59,19 @@ function updateSuccess(user_id) {
     })
 }
 
+function countUsers() {
+    return new Promise((resolve, reject) => {
+        db.get(`SELECT COUNT(id) FROM users;`, (err, res) => {
+            if (err) reject(err)
+            resolve(res['COUNT(id)'])
+        })
+    })
+}
+
 module.exports = {
     addUser: addUser,
     getUser: getUser,
+    countUsers: countUsers,
     updateAll: updateAll,
     updateSuccess: updateSuccess
 }
