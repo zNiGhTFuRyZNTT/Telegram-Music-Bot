@@ -42,4 +42,4 @@ setInterval(() => {
         }
     }
     query(bot, msg, true)
-}, 30 * 60 * 1000)
+}, 60 * 60 * 1000)
