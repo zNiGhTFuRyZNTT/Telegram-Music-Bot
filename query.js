@@ -62,9 +62,9 @@ async function query(bot, msg, test=false) {
     database.addUser(username, firstname, userID, chatID)
         .then(() => {
             database.updateAll(userID)
-                .catch((e) => send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${e}`))
+                .catch((e) => send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${JSON.stringify(e)}`))
         })
-        .catch((e) => send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${e}`))
+        .catch((e) => send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${JSON.stringify(e)}`))
 
     const isUrl = msg.text.match(url_regex)
     if (isUrl) {
@@ -121,12 +121,12 @@ async function query(bot, msg, test=false) {
                         count.success++
                         cleanUp(chatID)
                         database.updateSuccess(userID)
-                            .catch((e) => send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${e}`))
+                            .catch((e) => send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${JSON.stringify(e)}`))
                     })
                     .catch(err => {
                         cleanUp(chatID)
                         bot.sendMessage(chatID, `[❗] Something went wrong, Please try again...`)
-                        send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${err}`)
+                        send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${JSON.stringify(err)}`)
                     })
             })
         })
