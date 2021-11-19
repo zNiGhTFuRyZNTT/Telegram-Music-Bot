@@ -14,7 +14,7 @@ bot.on('/donate', (msg) => msg.reply.text(' [>] https://www.paypal.me/znightfury
 bot.on('/joom', msg => {
     if (msg.from.id === 111733645 || msg.from.id === 214619416)
         getStatus()
-            .then(res => msg.reply.text(`Users ${res} | Success ${count.success} | All ${count.all}`))
+            .then(res => msg.reply.text(`Users: ${res.users}\n\nMemory: All ${count.all} | Success ${count.success}\n\nDatabase: All ${res.all} | Success ${res.success}`))
             .catch((e) => send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${e.description}`))
 })
 
