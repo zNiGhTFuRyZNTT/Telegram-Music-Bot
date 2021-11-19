@@ -61,19 +61,19 @@ function updateSuccess(user_id) {
 
 function getStatus() {
     return new Promise((resolve, reject) => {
-        db.get('SELECT COUNT(id) FROM users', (err, count) => {
+        db.get('SELECT COUNT(id) FROM users', (err, users) => {
             if (err) reject(err)
 
-            db.get('SELECT SUM(all) FROM users', (err, all) => {
+            db.get('SELECT SUM("all") FROM users', (err, all) => {
                 if (err) reject(err)
 
                 db.get('SELECT SUM(success) FROM users', (err, success) => {
                     if (err) reject(err)
-
+                    
                     resolve({
-                        count: count['COUNT(id)'],
-                        all: all['SUM(all)'],
-                        success: success['SUM(success)']
+                        all: all['SUM("all")'],
+                        success: success['SUM(success)'],
+                        users: users['COUNT(id)'],
                     })
                 })
             })
