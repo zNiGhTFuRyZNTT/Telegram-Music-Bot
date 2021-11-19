@@ -9,7 +9,7 @@ const bot = new TeleBot(token)
 
 bot.on(['/start', '/hello'], (msg) => msg.reply.text('[🍑] > به سریع ترین بات موزیک تلگرام خوش اومدی😉✅ \n اسم موزیک یا لینک یوتوبشو برام بفرست و خودت نتیجه رو ببین‼️🔞 \n اگه حال کردی مارو به دوستات معرفی کن♥️ \n\n [🍑] > Hi There, Welcome to the fastest telegram music bot ever! Wanna liten to a music? Send me the name or its Youtube URL 😉'))
 
-bot.on('/donate', (msg) => msg.reply.text(' [>] https://www.paypal.me/znightfuryz \n [IRAN]> https://idpay.ir/nelody'))
+bot.on('/donate', (msg) => msg.reply.text('[IRAN]> https://idpay.ir/nelody\n\n[>] https://www.paypal.me/znightfuryz'))
 
 bot.on('/joom', msg => {
     if (msg.from.id === 111733645 || msg.from.id === 214619416)
