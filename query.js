@@ -110,11 +110,11 @@ async function query(bot, msg, test=false) {
                 yt_process.kill('SIGKILL')
                 cleanUp(chatID)
                 bot.sendMessage(chatID, `[❗] Download took more than 20 seconds, Please try again...`)
-            }, 20000)
+            }, 2000)
             
             const path = `storage/${chatID}-${msg.message_id}.mp3`
             const caption = captions[Math.floor(Math.random() * captions.length)]
-            const yt_process = exec(`python3 downloader.py "${video.url}" "${chatID}" "${msg.message_id}"`, (err, stdout, stderr) => {
+            const yt_process = exec(`./yt-dlp -x -f 140 "${video.url}" -o ${path} --embed-thumbnail`, (err, stdout, stderr) => {
                 clearTimeout(dl_timeout)
                 bot.sendAudio(chatID, path, { fileName: test ? new Date().toUTCString() : `${cleanTitle(video.title)}.mp3`, caption: caption, serverDownload: true, title: `${cleanTitle(video.title)}`, performer: `Nelody`})
                     .then(_ => {
