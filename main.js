@@ -1,5 +1,5 @@
 const TeleBot = require('telebot')
-const searchYT = require('yt-search')
+const admin = require('./admin')
 const { getStatus } = require('./database')
 const { send_log, query, count } = require('./query.js')
 require('dotenv').config()
@@ -18,8 +18,11 @@ bot.on('/joom', msg => {
             .catch((e) => send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${JSON.stringify(e)}`))
 })
 
+bot.on('/user', admin.searchUser)
+
 bot.on('text', async (msg) => {
-    if (['/joom', '/donate', '/start', '/hello'].includes(msg.text)) return
+    const bannedCmds = ['/joom', '/donate', '/start', '/hello', '/user', '/send']
+    if (bannedCmds.some((cmd => msg.text.startsWith(cmd)))) return
     if (msg.chat.id === -1001749065212 || msg.chat.id === -1001765223291) return
 
     query(bot, msg)
