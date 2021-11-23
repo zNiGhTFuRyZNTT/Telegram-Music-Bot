@@ -110,7 +110,7 @@ async function query(bot, msg, test=false) {
                 yt_process.kill('SIGKILL')
                 cleanUp(chatID)
                 bot.sendMessage(chatID, `[❗] Download took more than 20 seconds, Please try again...`)
-            }, 2000)
+            }, 20000)
             
             const path = `storage/${chatID}-${msg.message_id}.mp3`
             const caption = captions[Math.floor(Math.random() * captions.length)]
