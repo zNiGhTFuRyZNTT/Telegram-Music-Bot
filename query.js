@@ -81,7 +81,7 @@ async function query(bot, msg, test=false) {
         return
     }
 
-    msg.reply.text("Please wait...")
+    msg.reply.text("[🔞] Please wait...")
         .then(async mainMsg => {
             const messageID = mainMsg.message_id
             
