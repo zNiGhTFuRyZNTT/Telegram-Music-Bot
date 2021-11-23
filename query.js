@@ -82,7 +82,7 @@ async function query(bot, msg, test=false) {
     }
 
     msg.reply.text("Please wait...")
-        .then(mainMsg => {
+        .then(async mainMsg => {
             const messageID = mainMsg.message_id
             
             status[chatID] = true
@@ -101,7 +101,8 @@ async function query(bot, msg, test=false) {
             catch(e) {
                 if (!video) {
                     cleanUp(chatID)
-                    bot.sendMessage(chatID, `[❗] Your requested music is not available.`)
+                    bot.editMessageText({ chatId: chatID, messageId: messageID }, `[❗] Your requested music is not available.`)
+                        .catch((e) => send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${JSON.stringify(e)}`))
                     return
                 }
             }
@@ -109,12 +110,13 @@ async function query(bot, msg, test=false) {
             const vlen = video.seconds 
         
             if (vlen < 2400) {
-                bot.sendMessage(chatID, `[🍑] Downloading ${video.title}...`) 
+                bot.editMessageText({ chatId: chatID, messageId: messageID }, `[🍑] Downloading ${video.title}...`) 
                 .then(async _ => {
                     const dl_timeout = setTimeout(() => {
                         yt_process.kill('SIGKILL')
                         cleanUp(chatID)
-                        bot.sendMessage(chatID, `[❗] Download took more than 20 seconds, Please try again...`)
+                        bot.editMessageText({ chatId: chatID, messageId: messageID }, `[❗] Download took more than 20 seconds, Please try again...`)
+                            .catch((e) => send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${JSON.stringify(e)}`))
                     }, 20000)
                     
                     const path = `storage/${chatID}-${msg.message_id}.mp3`
@@ -130,7 +132,8 @@ async function query(bot, msg, test=false) {
                             })
                             .catch(err => {
                                 cleanUp(chatID)
-                                bot.sendMessage(chatID, `[❗] Something went wrong, Please try again...`)
+                                bot.editMessageText({ chatId: chatID, messageId: messageID }, `[❗] Something went wrong, Please try again...`)
+                                    .catch((e) => send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${JSON.stringify(e)}`))
                                 send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${JSON.stringify(err)}`)
                             })
                     })
@@ -138,7 +141,8 @@ async function query(bot, msg, test=false) {
             } 
             else {
                 cleanUp(chatID)
-                bot.sendMessage(chatID, `[❗] Your music is more than 40 Minutes.`)
+                bot.editMessageText({ chatId: chatID, messageId: messageID }, `[❗] Your music is more than 40 Minutes.`)
+                    .catch((e) => send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${JSON.stringify(e)}`))
             }
         })
         .catch((e) => send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${JSON.stringify(e)}`))
