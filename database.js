@@ -16,26 +16,27 @@ function getUser(userID) {
 
 function addUser(username, first_name, last_name, userID, chatID) {
     return new Promise((resolve, reject) => {
-        getUser(userID)
-            .then(res => {
-                if (res) {
-                    if (res.username != username || res.firstname != first_name || res.lastname != last_name)
-                        db.run("UPDATE users SET username = ?, firstname = ?, lastname = ? WHERE user_id = ?", [username, first_name, last_name, userID], err => {
+        if (userID != -1001749065212 && chatID != -1001749065212)
+            getUser(userID)
+                .then(res => {
+                    if (res) {
+                        if (res.username != username || res.firstname != first_name || res.lastname != last_name)
+                            db.run("UPDATE users SET username = ?, firstname = ?, lastname = ? WHERE user_id = ?", [username, first_name, last_name, userID], err => {
+                                if (err) reject(err)
+                                
+                                resolve(true)
+                            })
+                        else
+                            resolve(false)
+                    }
+                    else 
+                        db.run("INSERT INTO users (username, firstname, lastname, user_id, chat_id) VALUES (?, ?, ?, ?, ?)", [username, first_name, last_name, userID, chatID], err => {
                             if (err) reject(err)
                             
                             resolve(true)
-                        })
-                    else
-                        resolve(false)
-                }
-                else 
-                    db.run("INSERT INTO users (username, firstname, lastname, user_id, chat_id) VALUES (?, ?, ?, ?, ?)", [username, first_name, last_name, userID, chatID], err => {
-                        if (err) reject(err)
-                        
-                        resolve(true)
-                    }) 
-            })
-            .catch(reject)
+                        }) 
+                })
+                .catch(reject)
     })
 }
 
