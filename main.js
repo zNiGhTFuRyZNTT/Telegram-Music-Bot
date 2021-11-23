@@ -18,6 +18,14 @@ bot.on('/joom', msg => {
             .catch((e) => send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${JSON.stringify(e)}`))
 })
 
+bot.on('/send', msg => {
+    const query = msg.text.split('\n')
+    const user_id = query[0].split(' ')[1]
+
+    query.shift()
+    admin.sendToUser(bot, msg, user_id, query.join('\n'))
+})
+
 bot.on('/user', admin.searchUser)
 
 bot.on('text', async (msg) => {
