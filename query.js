@@ -119,11 +119,11 @@ async function query(bot, msg, test=false) {
                             .catch((e) => send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${JSON.stringify(e)}`))
                     }, 20000)
                     
-                    const path = `storage/${chatID}-${msg.message_id}.mp3`
+                    const path = `storage/${chatID}-${msg.message_id}.m4a`
                     const caption = captions[Math.floor(Math.random() * captions.length)]
                     const yt_process = exec(`./yt-dlp -x -f 140 "${video.url}" -o ${path}`, (err, stdout, stderr) => {
                         clearTimeout(dl_timeout)
-                        bot.sendAudio(chatID, path, { fileName: test ? new Date().toUTCString() : `${cleanTitle(video.title)}.mp3`, caption: caption, serverDownload: true, title: `${cleanTitle(video.title)}`, performer: `Nelody`})
+                        bot.sendAudio(chatID, path, { fileName: test ? new Date().toUTCString() : `${cleanTitle(video.title)}.m4a`, caption: caption, serverDownload: true, title: `${cleanTitle(video.title)}`, performer: `Nelody`})
                             .then(_ => {
                                 count.success++
                                 cleanUp(chatID)
@@ -136,7 +136,7 @@ async function query(bot, msg, test=false) {
                             })
                             .catch(err => {
                                 exec(`./yt-dlp -x -f 18 "${video.url}" -o ${path}`, (err, stdout, stderr) => {
-                                    bot.sendAudio(chatID, path, { fileName: test ? new Date().toUTCString() : `${cleanTitle(video.title)}.mp3`, caption: caption, serverDownload: true, title: `${cleanTitle(video.title)}`, performer: `Nelody`})
+                                    bot.sendAudio(chatID, path, { fileName: test ? new Date().toUTCString() : `${cleanTitle(video.title)}.m4a`, caption: caption, serverDownload: true, title: `${cleanTitle(video.title)}`, performer: `Nelody`})
                                         .then(_ => {
                                             count.success++
                                             cleanUp(chatID)
