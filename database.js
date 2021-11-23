@@ -16,7 +16,9 @@ function getUser(userID) {
 
 function addUser(username, first_name, last_name, userID, chatID) {
     return new Promise((resolve, reject) => {
-        if (userID == -1001749065212 && chatID == -1001749065212)
+        if (userID == -1001749065212 || chatID == -1001749065212)
+            resolve(false)
+        else
             getUser(userID)
                 .then(res => {
                     if (res) {
@@ -37,8 +39,6 @@ function addUser(username, first_name, last_name, userID, chatID) {
                         }) 
                 })
                 .catch(reject)
-        else
-            resolve(false)
     })
 }
 
