@@ -14,14 +14,14 @@ function getUser(userID) {
     })
 }
 
-function addUser(username, first_name, userID, chatID) {
+function addUser(username, first_name, last_name, userID, chatID) {
     return new Promise((resolve, reject) => {
         getUser(userID)
             .then(res => {
                 if (res) 
                     resolve(false)
                 else 
-                    db.run("INSERT INTO users (username, firstname, user_id, chat_id) VALUES (?, ?, ?, ?)", [username, first_name, userID, chatID], err => {
+                    db.run("INSERT INTO users (username, firstname, lastname, user_id, chat_id) VALUES (?, ?, ?, ?, ?)", [username, first_name, last_name, userID, chatID], err => {
                         if (err) reject(err)
                         
                         resolve(true)

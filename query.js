@@ -57,9 +57,10 @@ async function query(bot, msg, test=false) {
     const userID = msg.from.id
     const username = msg.from.username
     const firstname = msg.from.first_name
+    const lastname = msg.from.last_name ?? null
     // < --- End --- >
 
-    database.addUser(username, firstname, userID, chatID)
+    database.addUser(username, firstname, lastname, userID, chatID)
         .then(() => {
             database.updateAll(userID)
                 .catch((e) => send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${JSON.stringify(e)}`))
