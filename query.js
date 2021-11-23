@@ -127,7 +127,11 @@ async function query(bot, msg, test=false) {
                             .then(_ => {
                                 count.success++
                                 cleanUp(chatID)
+
                                 database.updateSuccess(userID)
+                                    .catch((e) => send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${JSON.stringify(e)}`))
+
+                                bot.deleteMessage(chatID, messageID)
                                     .catch((e) => send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${JSON.stringify(e)}`))
                             })
                             .catch(err => {
