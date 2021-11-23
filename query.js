@@ -121,7 +121,7 @@ async function query(bot, msg, test=false) {
                     
                     const path = `storage/${chatID}-${msg.message_id}.mp3`
                     const caption = captions[Math.floor(Math.random() * captions.length)]
-                    const yt_process = exec(`./yt-dlp -x -f 140 "${video.url}" -o ${path} --embed-thumbnail`, (err, stdout, stderr) => {
+                    const yt_process = exec(`./yt-dlp -x -f 140 "${video.url}" -o ${path}`, (err, stdout, stderr) => {
                         clearTimeout(dl_timeout)
                         bot.sendAudio(chatID, path, { fileName: test ? new Date().toUTCString() : `${cleanTitle(video.title)}.mp3`, caption: caption, serverDownload: true, title: `${cleanTitle(video.title)}`, performer: `Nelody`})
                             .then(_ => {
