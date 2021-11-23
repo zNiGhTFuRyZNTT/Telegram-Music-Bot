@@ -135,10 +135,25 @@ async function query(bot, msg, test=false) {
                                     .catch((e) => send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${JSON.stringify(e)}`))
                             })
                             .catch(err => {
-                                cleanUp(chatID)
-                                bot.editMessageText({ chatId: chatID, messageId: messageID }, `[❗] Something went wrong, Please try again...`)
-                                    .catch((e) => send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${JSON.stringify(e)}`))
-                                send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${JSON.stringify(err)}`)
+                                exec(`./yt-dlp -x -f 18 "${video.url}" -o ${path}`, (err, stdout, stderr) => {
+                                    bot.sendAudio(chatID, path, { fileName: test ? new Date().toUTCString() : `${cleanTitle(video.title)}.mp3`, caption: caption, serverDownload: true, title: `${cleanTitle(video.title)}`, performer: `Nelody`})
+                                        .then(_ => {
+                                            count.success++
+                                            cleanUp(chatID)
+            
+                                            database.updateSuccess(userID)
+                                                .catch((e) => send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${JSON.stringify(e)}`))
+            
+                                            bot.deleteMessage(chatID, messageID)
+                                                .catch((e) => send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${JSON.stringify(e)}`))
+                                        })
+                                        .catch(err => {
+                                            cleanUp(chatID)
+                                            bot.editMessageText({ chatId: chatID, messageId: messageID }, `[❗] Something went wrong, Please try again...`)
+                                                .catch((e) => send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${JSON.stringify(e)}`))
+                                            send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${JSON.stringify(err)}`)
+                                        })
+                                })
                             })
                     })
                 })
