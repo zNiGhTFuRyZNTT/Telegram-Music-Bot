@@ -81,61 +81,67 @@ async function query(bot, msg, test=false) {
         return
     }
 
-    status[chatID] = true
-    try {
-        if (isUrl) {
-            var video = await ytdl.getInfo(msg.text)
-            video.title = video.videoDetails.title
-            video.url = video.videoDetails.video_url
-            video.seconds = video.videoDetails.lengthSeconds
-        }
-        else {
-            var video = await findVideo(msg.text)
-            video.seconds = video.duration.seconds
-        }
-    }
-    catch(e) {
-        if (!video) {
-            cleanUp(chatID)
-            bot.sendMessage(chatID, `[❗] Your requested music is not available.`)
-            return
-        }
-    }
-
-    const vlen = video.seconds 
-
-    if (vlen < 2400) {
-        bot.sendMessage(chatID, `[🍑] Downloading ${video.title}...`) 
-        .then(async _ => {
-            const dl_timeout = setTimeout(() => {
-                yt_process.kill('SIGKILL')
-                cleanUp(chatID)
-                bot.sendMessage(chatID, `[❗] Download took more than 20 seconds, Please try again...`)
-            }, 20000)
+    msg.reply.text("Please wait...")
+        .then(mainMsg => {
+            const messageID = mainMsg.message_id
             
-            const path = `storage/${chatID}-${msg.message_id}.mp3`
-            const caption = captions[Math.floor(Math.random() * captions.length)]
-            const yt_process = exec(`./yt-dlp -x -f 140 "${video.url}" -o ${path} --embed-thumbnail`, (err, stdout, stderr) => {
-                clearTimeout(dl_timeout)
-                bot.sendAudio(chatID, path, { fileName: test ? new Date().toUTCString() : `${cleanTitle(video.title)}.mp3`, caption: caption, serverDownload: true, title: `${cleanTitle(video.title)}`, performer: `Nelody`})
-                    .then(_ => {
-                        count.success++
+            status[chatID] = true
+            try {
+                if (isUrl) {
+                    var video = await ytdl.getInfo(msg.text)
+                    video.title = video.videoDetails.title
+                    video.url = video.videoDetails.video_url
+                    video.seconds = video.videoDetails.lengthSeconds
+                }
+                else {
+                    var video = await findVideo(msg.text)
+                    video.seconds = video.duration.seconds
+                }
+            }
+            catch(e) {
+                if (!video) {
+                    cleanUp(chatID)
+                    bot.sendMessage(chatID, `[❗] Your requested music is not available.`)
+                    return
+                }
+            }
+        
+            const vlen = video.seconds 
+        
+            if (vlen < 2400) {
+                bot.sendMessage(chatID, `[🍑] Downloading ${video.title}...`) 
+                .then(async _ => {
+                    const dl_timeout = setTimeout(() => {
+                        yt_process.kill('SIGKILL')
                         cleanUp(chatID)
-                        database.updateSuccess(userID)
-                            .catch((e) => send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${JSON.stringify(e)}`))
+                        bot.sendMessage(chatID, `[❗] Download took more than 20 seconds, Please try again...`)
+                    }, 20000)
+                    
+                    const path = `storage/${chatID}-${msg.message_id}.mp3`
+                    const caption = captions[Math.floor(Math.random() * captions.length)]
+                    const yt_process = exec(`./yt-dlp -x -f 140 "${video.url}" -o ${path} --embed-thumbnail`, (err, stdout, stderr) => {
+                        clearTimeout(dl_timeout)
+                        bot.sendAudio(chatID, path, { fileName: test ? new Date().toUTCString() : `${cleanTitle(video.title)}.mp3`, caption: caption, serverDownload: true, title: `${cleanTitle(video.title)}`, performer: `Nelody`})
+                            .then(_ => {
+                                count.success++
+                                cleanUp(chatID)
+                                database.updateSuccess(userID)
+                                    .catch((e) => send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${JSON.stringify(e)}`))
+                            })
+                            .catch(err => {
+                                cleanUp(chatID)
+                                bot.sendMessage(chatID, `[❗] Something went wrong, Please try again...`)
+                                send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${JSON.stringify(err)}`)
+                            })
                     })
-                    .catch(err => {
-                        cleanUp(chatID)
-                        bot.sendMessage(chatID, `[❗] Something went wrong, Please try again...`)
-                        send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${JSON.stringify(err)}`)
-                    })
-            })
+                })
+            } 
+            else {
+                cleanUp(chatID)
+                bot.sendMessage(chatID, `[❗] Your music is more than 40 Minutes.`)
+            }
         })
-    } 
-    else {
-        cleanUp(chatID)
-        bot.sendMessage(chatID, `[❗] Your music is more than 40 Minutes.`)
-    }
+        .catch((e) => send_log(bot, `UserID: ${userID}\nQuery: ${msg.text}\n${JSON.stringify(e)}`))
 }
 
 module.exports = {
