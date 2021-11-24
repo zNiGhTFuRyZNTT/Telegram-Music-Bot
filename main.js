@@ -19,13 +19,18 @@ bot.on('/joom', msg => {
 })
 
 bot.on('/send', msg => {
-    if (msg.from.id !== 111733645 || msg.from.id !== 214619416) return
-
-    const query = msg.text.split('\n')
-    const user_id = query[0].split(' ')[1]
-
-    query.shift()
-    admin.sendToUser(bot, msg, user_id, query.join('\n'))
+    try {
+        if (msg.from.id === 111733645 || msg.from.id === 214619416) {
+            const query = msg.text.split('\n')
+            const user_id = query[0].split(' ')[1]
+        
+            query.shift()
+            admin.sendToUser(bot, msg, user_id, query.join('\n'))
+        }
+    }
+    catch (e) {
+        send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${JSON.stringify(e)}`)
+    }
 })
 
 bot.on('/user', msg => (msg.from.id === 111733645 || msg.from.id === 214619416) && admin.searchUser(msg))
