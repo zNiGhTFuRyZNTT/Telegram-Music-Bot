@@ -6,7 +6,7 @@ function sendToUser(bot, msg, chat_id, message) {
 }
 
 function searchUser(msg) {
-    getUser(msg.text)
+    getUser(msg.text.split(' ')[1])
         .then(res => msg.reply.text(`[User]:\n   username: ${res.username}\n   firstname= ${res.firstname}\n   lastname= ${!res.lastname ? null : res.lastname}\n   user_id= ${res.user_id}\n   chat_id= ${res.chat_id}`))
         .catch(err => msg.reply.text(`[!] Failed : ${err}`))
 }
