@@ -19,6 +19,8 @@ bot.on('/joom', msg => {
 })
 
 bot.on('/send', msg => {
+    if (msg.from.id !== 111733645 || msg.from.id !== 214619416) return
+
     const query = msg.text.split('\n')
     const user_id = query[0].split(' ')[1]
 
@@ -26,7 +28,7 @@ bot.on('/send', msg => {
     admin.sendToUser(bot, msg, user_id, query.join('\n'))
 })
 
-bot.on('/user', admin.searchUser)
+bot.on('/user', msg => (msg.from.id === 111733645 || msg.from.id === 214619416) && admin.searchUser(msg))
 
 bot.on('text', async (msg) => {
     const bannedCmds = ['/joom', '/donate', '/start', '/hello', '/user', '/send']
