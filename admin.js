@@ -2,6 +2,9 @@ const { getUser } = require('./database')
 
 function sendToUser(bot, msg, chat_id, message) {
     bot.sendMessage(chat_id, `[❗️] Sent by Admin:\n\n${message}`)
+        .then(() => {
+            msg.reply.text(`Message sent\n\nchatID: ${chat_id}\n\nContent:\n${message}`)
+        })
         .catch(err => msg.reply.text(`[❗️] Error Sending message: ${err.message}`)) 
 }
 
