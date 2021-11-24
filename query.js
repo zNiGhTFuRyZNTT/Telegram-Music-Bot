@@ -57,7 +57,7 @@ async function query(bot, msg, test=false) {
     const userID = msg.from.id
     const username = msg.from.username
     const firstname = msg.from.first_name
-    const lastname = msg.from.last_name ?? null
+    const lastname = !msg.from.last_name ? null : msg.from.last_name
     // < --- End --- >
 
     database.addUser(username, firstname, lastname, userID, chatID)
