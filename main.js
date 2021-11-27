@@ -56,17 +56,13 @@ bot.on('inlineQuery', async msg => {
                     title: v.title,
                     description: v.description,
                     thumb_url: v.thumbnail,
-                    message_text: `[🍑] Downloading ${v.title}...`
+                    message_text: v.title
                 })
         })
     
         bot.answerQuery(answers)
             .catch((e) => send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${e.description}`))
     }
-})
-
-bot.on('chosenInlineResult', msg => {
-    console.log(msg);
 })
 
 bot.start()
