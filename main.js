@@ -45,6 +45,8 @@ bot.on('text', async (msg) => {
 })
 
 bot.on('inlineQuery', async msg => {
+    if (!msg.query) return
+
     const answers = bot.answerList(msg.id, { cacheTime: 0 })
     const result = await searchYT(`${msg.query} audio`)
     
