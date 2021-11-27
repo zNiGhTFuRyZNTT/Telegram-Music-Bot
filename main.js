@@ -1,4 +1,5 @@
 const TeleBot = require('telebot')
+const searchYT = require('yt-search')
 const admin = require('./admin')
 const { getStatus } = require('./database')
 const { send_log, query, count } = require('./query.js')
@@ -41,6 +42,31 @@ bot.on('text', async (msg) => {
     if (msg.chat.id === -1001749065212 || msg.chat.id === -1001765223291) return
 
     query(bot, msg)
+})
+
+bot.on('inlineQuery', async msg => {
+    const answers = bot.answerList(msg.id, { cacheTime: 0 })
+    const result = await searchYT(`${msg.query} audio`)
+    
+    if (result.videos.length > 1) {
+        result.videos.forEach((v, i) => {
+            v.seconds < 2400 &&
+                answers.addArticle({
+                    id: i,
+                    title: v.title,
+                    description: v.description,
+                    thumb_url: v.thumbnail,
+                    message_text: `[🍑] Downloading ${v.title}...`
+                })
+        })
+    
+        bot.answerQuery(answers)
+            .catch((e) => send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${e.description}`))
+    }
+})
+
+bot.on('chosenInlineResult', msg => {
+    console.log(msg);
 })
 
 bot.start()
