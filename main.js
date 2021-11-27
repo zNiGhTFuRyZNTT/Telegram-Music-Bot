@@ -51,19 +51,20 @@ bot.on('inlineQuery', async msg => {
     const result = await searchYT(`${msg.query} audio`)
     
     if (result.videos.length > 1) {
-        result.videos.forEach((v, i) => {
+        result.videos.forEach(async (v, i) => {
             v.seconds < 2400 &&
-                answers.addArticle({
+                await answers.addArticle({
                     id: i,
                     title: v.title,
                     description: v.description,
                     thumb_url: v.thumbnail,
                     message_text: v.title
                 })
+            
+            if (result.videos.length-1 == i) 
+                bot.answerQuery(answers, { cacheTime: 0 })
+                    .catch((e) => send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${e.description}`))
         })
-    
-        bot.answerQuery(answers, { cacheTime: 0 })
-            .catch((e) => send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${e.description}`))
     }
 })
 
