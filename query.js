@@ -50,6 +50,8 @@ function cleanUp(chatID) {
 }
 
 async function query(bot, msg, test=false) {
+    if (msg.chat.id <= 0) return
+    
     count.all++
 
     // < --- User Details --- >
