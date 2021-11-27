@@ -60,7 +60,7 @@ bot.on('inlineQuery', async msg => {
                 })
         })
     
-        bot.answerQuery(answers)
+        bot.answerQuery(answers, { cacheTime: 0 })
             .catch((e) => send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${e.description}`))
     }
 })
