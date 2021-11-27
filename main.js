@@ -66,6 +66,17 @@ bot.on('inlineQuery', async msg => {
                     .catch((e) => send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${e.description}`))
         })
     }
+    else {
+        await answers.addArticle({
+            id: 1,
+            title: "Error 404",
+            description: "Your requested music does not found",
+            message_text: "-"
+        })
+            
+        bot.answerQuery(answers, { cacheTime: 0 })
+            .catch((e) => send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${e.description}`))
+    }
 })
 
 bot.start()
