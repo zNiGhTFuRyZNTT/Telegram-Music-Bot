@@ -60,7 +60,7 @@ bot.on('inlineQuery', async msg => {
                     title: v.title,
                     description: v.description,
                     thumb_url: v.thumbnail,
-                    message_text: v.title
+                    message_text: v.url
                 })
             
             if (result.videos.length-1 == i) 
