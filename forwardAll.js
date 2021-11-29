@@ -3,7 +3,7 @@ const { appendFile } = require('fs')
 const { getAllUsers } = require('./database')
 require('dotenv').config()
 
-const interval = 100
+const interval = 500
 const token = process.env.API_KEY
 const bot = new TeleBot(token)
 
