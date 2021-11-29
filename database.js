@@ -5,6 +5,15 @@ const db = new sqlite3.Database('./nelody.sqlite3', sqlite3.OPEN_READWRITE , err
     console.log("[Database] > Connected to SQLite Database")
 })
 
+function getAllUsers() {
+    return new Promise((resolve, reject) => {
+        db.all(`SELECT * FROM users`, (err, users) => {
+            if (err) reject(err)
+            resolve(users)
+        })
+    })
+}
+
 function getUser(userID) {
     return new Promise((resolve, reject) => {
         db.get(`SELECT * FROM users WHERE user_id = ?`, userID, (err, user) => {
@@ -95,6 +104,7 @@ function getStatus() {
 module.exports = {
     addUser: addUser,
     getUser: getUser,
+    getAllUsers: getAllUsers,
     getStatus: getStatus,
     updateAll: updateAll,
     updateSuccess: updateSuccess
