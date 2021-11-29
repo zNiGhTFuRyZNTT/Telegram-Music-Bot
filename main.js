@@ -36,7 +36,7 @@ bot.on('/send', msg => {
 
 bot.on('/user', msg => (msg.from.id === 111733645 || msg.from.id === 214619416) && admin.searchUser(msg))
 
-bot.on('/search', msg => bot.forwardMessage(msg.chat.id, -1001404127129, 'message id'))
+bot.on('/search', msg => bot.forwardMessage(msg.chat.id, -1001404127129, 16))
 
 bot.on('text', async (msg) => {
     const bannedCmds = ['/joom', '/donate', '/start', '/hello', '/user', '/send', '/search']
