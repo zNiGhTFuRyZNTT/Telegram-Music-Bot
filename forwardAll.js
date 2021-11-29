@@ -12,7 +12,7 @@ getAllUsers()
             bot.forwardMessage(user.chat_id, -1001404127129, 16)
             .then(() => console.log(`Sending to ${user.firstname} `+"\033[32m"+"Success"+"\033[0m"))
             .catch(e => {
-                fs.appendFile('error.log', `\n${user.user_id} - ${JSON.stringify(e)}\n`, (err) => err && console.error(err))
+                appendFile('error.log', `\n${user.user_id} - ${JSON.stringify(e)}\n`, (err) => err && console.error(err))
 
                 console.log(`Sending to ${user.firstname} `+"\033[31m"+"Failed"+"\033[0m")
             })
