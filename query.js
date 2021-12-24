@@ -136,7 +136,7 @@ async function query(bot, msg, test=false) {
                     
                     const path = `storage/${chatID}-${msg.message_id}.m4a`
                     const caption = captions[Math.floor(Math.random() * captions.length)]
-                    const yt_process = exec(`./yt-dlp -x -f 140 "${video.url}" -o ${path}`, (err, stdout, stderr) => {
+                    const yt_process = exec(`./yt-dlp -x -f 140 "${video.url}" -o ${path}`, async (err, stdout, stderr) => {
                         clearTimeout(dl_timeout)
 
                         Math.random() < 0.55 &&
