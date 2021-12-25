@@ -139,8 +139,8 @@ async function query(bot, msg, test=false) {
                     const yt_process = exec(`./yt-dlp -x -f 140 "${video.url}" -o ${path}`, async (err, stdout, stderr) => {
                         clearTimeout(dl_timeout)
 
-                        Math.random() < 0.7 &&
-                            await send_donate_msg(text => bot.sendMessage(chatID, text))
+                        // Math.random() < 0.7 &&
+                        //    await send_donate_msg(text => bot.sendMessage(chatID, text))
 
                         bot.sendAudio(chatID, path, { fileName: test ? new Date().toUTCString() : `${cleanTitle(video.title)}.m4a`, caption: caption, serverDownload: true, title: `${cleanTitle(video.title)}`, performer: `Nelody`})
                             .then(_ => {
