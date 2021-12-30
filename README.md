@@ -1,7 +1,7 @@
 <br>
 <br>
 <p align="center">
-<img src="https://cdn.discordapp.com/attachments/820259991955963945/926025237655584778/Neloooooody.jpg" alt="NEMESIS TEAM LOGO" style="border-radius:5px"/>
+<img src="https://cdn.discordapp.com/attachments/820259991955963945/926025237655584778/Neloooooody.jpg" alt="NEMESIS TEAM LOGO" style="border-radius:5px; width:500px"/>
 </p>
 
 <br>
