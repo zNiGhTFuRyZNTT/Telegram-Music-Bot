@@ -23,6 +23,8 @@
 ---
 ## ❓ How to run
 
+### First of all create a bot using <a href="https://t.me/BotFather">BotFather</a> and customize it, then copy the API_KEY
+
 <br>
 
 - 👠 Make sure the database: nelody.sqlite3 is ready in the directory.
