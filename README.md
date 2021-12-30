@@ -29,7 +29,7 @@
 - 🖌️ Set API_KEY, LOG_CHANNEL_ID, ADMINS in .env
 - 🖌️ `npm i`
 - 🖌️ `npm start`
-
+- 🖌️ `Now send the Name or Youtube URL of any music you'd like to listen to`
 ### ⚠️ Make sure yt-dlp is up to date.
     
 <br>
