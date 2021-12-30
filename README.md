@@ -7,7 +7,7 @@
 <br>
 
 # <p align="center">Nelody</p>
-## <p align="center">The strongest and fastest telegram music bot ever</p>
+## <p align="center">The strongest and fastest telegram music bot ever known</p>
 ### <p align="center"> By <a href="https://github.com/zNiGhTFuRyZNTT">NiGhTFuRy</a> and <a href="https://github.com/MainSilent">MainSilent</a> </p>
 
 <br>
