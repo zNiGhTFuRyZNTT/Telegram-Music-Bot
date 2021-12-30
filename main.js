@@ -44,7 +44,6 @@ bot.on('/user', msg => {
     }
 })
 
-bot.on('/search', msg => bot.forwardMessage(msg.chat.id, -1001404127129, 16))
 
 bot.on('text', async (msg) => {
     const log_channel_id = Number(process.env.LOG_CHANNEL_ID) ? Number(process.env.LOG_CHANNEL_ID) : null
