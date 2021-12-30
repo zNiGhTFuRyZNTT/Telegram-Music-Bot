@@ -37,7 +37,8 @@ function cleanTitle(title) {
 
 
 function send_log(bot, msg) {
-    bot.sendMessage(-1001765223291, msg).catch(console.log)
+    const channel_id = Number(process.env.LOG_CHANNEL_ID) ? Number(process.env.LOG_CHANNEL_ID) : null
+    bot.sendMessage(channel_id, msg).catch(console.log)
 }
 
 async function findVideo(query) {
