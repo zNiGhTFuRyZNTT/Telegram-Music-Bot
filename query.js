@@ -74,6 +74,12 @@ async function query(bot, msg, test=false) {
 
     const isUrl = msg.text.match(url_regex)
     if (isUrl) {
+        try {
+            getYoutubeUrlId(msg.text)
+        } catch (error) {
+            bot.sendMessage(chatID, '[❗] Invalid URL')
+            return
+        }
         msg.text = getYoutubeUrlId(msg.text)
         if (!msg.text) {
             bot.sendMessage(chatID, '[❗] Invalid URL')
