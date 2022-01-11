@@ -23,6 +23,9 @@ bot.on('/joom', msg => {
 })
 
 bot.on('/lyric', async msg => {
+    if (msg.text.split(" ").length === 1) {
+        bot.sendMessage("Usage: /lyric <music name>\nExample: /lyric Eminem lose yourself\n❗Some Lyrics may be unavailable.")
+    }
     chatID = msg.chat.id
     bot.sendMessage(msg.from.id, `🥒 Finding Lyrics...`)
         .then(async message => {

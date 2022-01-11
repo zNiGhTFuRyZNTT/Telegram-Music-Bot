@@ -40,7 +40,11 @@ function get_url(query) {
         request(options, (err, res) => {
             if (err) reject(err)
             data = JSON.parse(res.body)
-            url = data.response.sections[1].hits[0].result.url
+            try {
+                url = data.response.sections[1].hits[0].result.url
+            } catch (error) {
+                reject(err)
+            }
             // return
             
             resolve(url)
