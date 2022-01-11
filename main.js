@@ -3,6 +3,7 @@ const searchYT = require('yt-search')
 const admin = require('./admin')
 const { getStatus } = require('./database')
 const { send_log, query, count } = require('./query.js')
+const { get_url, get_lyric } = require('./lyrics.js')
 require('dotenv').config()
 
 const token = process.env.API_KEY
@@ -21,8 +22,75 @@ bot.on('/joom', msg => {
             .catch((e) => send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${JSON.stringify(e)}`))
 })
 
+bot.on('/lyric', async msg => {
+    chatID = msg.chat.id
+    bot.sendMessage(msg.from.id, `🥒 Finding Lyrics...`)
+        .then(async message => {
+            const messageID = message.message_id
+            const query = msg.text.replace('/lyric ', '')
+            const url = await get_url(query).catch((err) => {
+                bot.sendMessage(`❗Error finding music -> ${query}`)
+                send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${JSON.stringify(err)}`)
+            })
+            const lyric = await get_lyric(url).catch((err) => {
+                bot.sendMessage(`❗Error fetching Lyrics, please contact @NiGhTFuRyZz`)
+                send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${JSON.stringify(err)}`)
+            })
+
+            
+            if (lyric.length >= 4096) {
+                bot.editMessageText({ chatId: chatID, messageId: messageID }, `[❗] Lyric is too long, it will be sent as multiple messages.`)
+                    .then( _ => {
+                        const verses = lyric.match(/(.|[\r\n]){1,4090}/g) // Replace n with the size of the substring
+                        bot.deleteMessage(chatID, messageID).catch((err) => {
+                            bot.sendMessage(msg.from.id, `❗[Error] occurred, if this error presists please contact @NiGhTFuRyZz`)
+                            send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${JSON.stringify(err)}`)
+        
+                        }).catch((err) => {
+                            bot.sendMessage(msg.from.id, `❗[Error] Lyric is too long please inform @NiGhTFuRyZz with this error.`)
+                            send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${JSON.stringify(err)}`)
+                        })
+                        // console.log(verses);
+
+                        let current = 0
+                        const interval = setInterval(() => {
+                          if (current === verses.length) {
+                            clearInterval(interval)
+                          } else {
+                            bot.sendMessage(msg.from.id, verses[current]).catch((err) => {
+                                if (err.description.includes('long')) {
+                                    bot.sendMessage(msg.from.id, `❗[Error] Lyric is too long please inform @NiGhTFuRyZz with this error.`)
+                                    send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${JSON.stringify(err)}`)
+                                }
+                                else {
+                                    bot.sendMessage(msg.from.id, `❗[Error] occurred, if this error presists please contact @NiGhTFuRyZz`)
+                                    send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${JSON.stringify(err)}`)
+                                }
+                            })
+                            current++
+                          }
+                        }, 500)
+
+                    })
+
+            }
+            else {
+                bot.sendMessage(msg.from.id, lyric).catch((err) => {
+                    bot.sendMessage(msg.from.id, `❗[Error] occurred, if this error presists please contact @NiGhTFuRyZz`)
+                    send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${JSON.stringify(err)}`)
+                })
+            }
+        
+        })
+
+
+
+
+
+})
+
 bot.on('/send', msg => {
-    const is_admin = (admins.indexOf(msg.form.id) >= 0)
+    const is_admin = (admins.indexOf(msg.from.id) >= 0)
     try {
         if (is_admin) {
             const query = msg.text.split('\n')
@@ -38,7 +106,7 @@ bot.on('/send', msg => {
 })
 
 bot.on('/user', msg => {
-    const is_admin = (admins.indexOf(msg.form.id) >= 0)
+    const is_admin = (admins.indexOf(msg.from.id) >= 0)
     if (is_admin) {
         admin.searchUser(msg)
     }
@@ -47,7 +115,7 @@ bot.on('/user', msg => {
 
 bot.on('text', async (msg) => {
     const log_channel_id = Number(process.env.LOG_CHANNEL_ID) ? Number(process.env.LOG_CHANNEL_ID) : null
-    const bannedCmds = ['/joom', '/donate', '/start', '/hello', '/user', '/send', '/search']
+    const bannedCmds = ['/joom', '/donate', '/start', '/hello', '/user', '/send', '/search', '/lyric']
     if (bannedCmds.some((cmd => msg.text.startsWith(cmd)))) return
     if (msg.chat.id === -1001749065212 || msg.chat.id === log_channel_id) return
 
