@@ -42,12 +42,11 @@ function get_url(query) {
             data = JSON.parse(res.body)
             try {
                 url = data.response.sections[1].hits[0].result.url
+                resolve(url)
             } catch (error) {
-                reject(err)
+                reject(error)
             }
             // return
-            
-            resolve(url)
         })
     });
 }
