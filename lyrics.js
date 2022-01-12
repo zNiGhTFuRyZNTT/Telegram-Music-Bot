@@ -3,29 +3,7 @@ const cheerio = require('cheerio');
 
 
 
-function get_lyric(url) {
-    return new Promise((resolve, reject) => {
-        const options =   {
-            url: url,
-            headers: {
-              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36 OPR/82.0.4227.50'
-            }
-          }
-          console.log(options.url);
-          request(options, (err, res, body) => {
-            if (err) reject(err)
-            const $ = cheerio.load(body);
-            const lyrics = []
-            const vers = $('div .Lyrics__Container-sc-1ynbvzw-6').contents().map(function() {
-                return (this.type === 'text') ? $(this).text() + '\n ' : ' ';
-             }).get().join(' ');
-            // console.log(lyrics);
-            // resolve(lyrics.join('\n\n'));
-            resolve(vers)
-        })
-    })
 
-}
 
 
 function get_url(query) {
@@ -49,6 +27,27 @@ function get_url(query) {
             // return
         })
     });
+}
+function get_lyric(url) {
+    return new Promise((resolve, reject) => {
+        const options =   {
+            url: url,
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36 OPR/82.0.4227.50'
+            }
+          }
+          console.log(options.url);
+          request(options, (err, res, body) => {
+            if (err) reject(err)
+            const $ = cheerio.load(body);
+            const vers = $('div .Lyrics__Container-sc-1ynbvzw-6').contents().map(function() {
+                return $(this).text() + ''
+             }).get().join('-').split('-').filter(n => n.length > 0).join('\n')
+             
+            resolve(vers)
+        })
+    })
+
 }
 
 
