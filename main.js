@@ -23,14 +23,20 @@ bot.on('/joom', msg => {
 })
 
 bot.on('/lyric', async msg => {
+    const status = []
     console.log(msg.text.length);
     if (msg.text.length < 7) {
         bot.sendMessage(msg.from.id, "Usage: /lyric <music name>\nExample: /lyric Eminem lose yourself\n❗Some Lyrics may be unavailable.").catch((err) => {console.log(err)})
         return
     }
-    chatID = msg.chat.id
+    const chatID = msg.chat.id
+    if (status[chatID]) {
+        bot.sendMessage(chatID, `[❗] Please wait until your last query is completed.`)
+        return
+    }
     bot.sendMessage(msg.from.id, `🥒 Finding Lyrics...`)
         .then(async message => {
+            status[chatID] = true
             const messageID = message.message_id
             const query = msg.text.replace('/lyric ', '')
             const url = await get_url(query).catch((err) => {
@@ -38,11 +44,13 @@ bot.on('/lyric', async msg => {
                 send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${JSON.stringify(err)}`)
             })
             if (url == null) {
+                status[chatID] = false
                 // bot.sendMessage(msg.from.id, `❗Error finding music -> ${query}`)
                 return
             }
             const lyric = await get_lyric(url).catch((err) => {
                 bot.sendMessage(msg.from.id, `❗Error fetching Lyrics, please contact @NiGhTFuRyZz`)
+                status[chatID] = false
                 send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${JSON.stringify(err)}`)
             })
 
@@ -52,11 +60,9 @@ bot.on('/lyric', async msg => {
                         const verses = lyric.match(/(.|[\r\n]){1,4090}/g) // Replace n with the size of the substring
                         bot.deleteMessage(chatID, messageID).catch((err) => {
                             bot.sendMessage(msg.from.id, `❗[Error] occurred, if this error presists please contact @NiGhTFuRyZz`)
-                            send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${JSON.stringify(err)}`)
+                            status[chatID] = false
+                            send_log(bot, `User: ${msg.from.id}\nQuery: ${query}\nError: ${JSON.stringify(err)}`)
         
-                        }).catch((err) => {
-                            bot.sendMessage(msg.from.id, `❗[Error] Lyric is too long please inform @NiGhTFuRyZz with this error.`)
-                            send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${JSON.stringify(err)}`)
                         })
                         // console.log(verses);
 
@@ -68,16 +74,19 @@ bot.on('/lyric', async msg => {
                             bot.sendMessage(msg.from.id, verses[current]).catch((err) => {
                                 if (err.description.includes('long')) {
                                     bot.sendMessage(msg.from.id, `❗[Error] Lyric is too long please inform @NiGhTFuRyZz with this error.`)
+                                    status[chatID] = false
                                     send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${JSON.stringify(err)}`)
                                 }
                                 else {
-                                    bot.sendMessage(msg.from.id, `❗[Error] occurred, if this error presists please contact @NiGhTFuRyZz`)
+                                    bot.sendMessage(msg.from.id, `❗[Error] occurred, if this error presists please contact @NiGhTFuRyZz`)\
+                                    status[chatID] = false
                                     send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${JSON.stringify(err)}`)
                                 }
                             })
                             current++
                             }
-                        }, 500)
+                        }, 1500)
+                        status[chatID] = false
 
                     })
 
