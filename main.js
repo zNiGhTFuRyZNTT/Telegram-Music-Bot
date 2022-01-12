@@ -78,7 +78,7 @@ bot.on('/lyric', async msg => {
                                     send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${JSON.stringify(err)}`)
                                 }
                                 else {
-                                    bot.sendMessage(msg.from.id, `❗[Error] occurred, if this error presists please contact @NiGhTFuRyZz`)\
+                                    bot.sendMessage(msg.from.id, `❗[Error] occurred, if this error presists please contact @NiGhTFuRyZz`)
                                     status[chatID] = false
                                     send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${JSON.stringify(err)}`)
                                 }
