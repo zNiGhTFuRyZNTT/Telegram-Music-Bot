@@ -8,6 +8,11 @@ const cheerio = require('cheerio');
 
 function get_url(query) {
     return new Promise((resolve, reject) => {
+        if (!/^[0-9a-zA-Z\s]+$/.test(query)) {
+            resolve(null)
+            return
+        }
+
         query = query.replaceAll(" ", "+")
         const options = {
             url: `https://genius.com/api/search/multi?per_page=5&q=${query}`,
@@ -17,12 +22,13 @@ function get_url(query) {
         }
         request(options, (err, res) => {
             if (err) reject(err)
+            // console.log(res);
             data = JSON.parse(res.body)
             try {
                 url = data.response.sections[1].hits[0].result.url
                 resolve(url)
             } catch (error) {
-                reject(error)
+                resolve(-1)
             }
             // return
         })

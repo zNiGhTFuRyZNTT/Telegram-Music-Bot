@@ -9,6 +9,7 @@ require('dotenv').config()
 const token = process.env.API_KEY
 const bot = new TeleBot(token)
 const admins = process.env.ADMINS.split(",").map(Number)
+const status = []
 
 bot.on(['/start', '/hello'], (msg) => msg.reply.text('[🍑] > به سریع ترین بات موزیک تلگرام خوش اومدی😉✅ \n اسم موزیک یا لینک یوتوبشو برام بفرست و خودت نتیجه رو ببین‼️🔞 \n اگه حال کردی مارو به دوستات معرفی کن♥️ \n\n [🍑] > Hi There, Welcome to the fastest telegram music bot ever! Wanna liten to a music? Send me the name or its Youtube URL 😉'))
 
@@ -23,7 +24,6 @@ bot.on('/joom', msg => {
 })
 
 bot.on('/lyric', async msg => {
-    const status = []
     console.log(msg.text.length);
     if (msg.text.length < 7) {
         bot.sendMessage(msg.from.id, "Usage: /lyric <music name>\nExample: /lyric Eminem lose yourself\n❗Some Lyrics may be unavailable.").catch((err) => {console.log(err)})
@@ -37,20 +37,27 @@ bot.on('/lyric', async msg => {
     bot.sendMessage(msg.from.id, `🥒 Finding Lyrics...`)
         .then(async message => {
             status[chatID] = true
+            console.log(status[chatID]);
             const messageID = message.message_id
             const query = msg.text.replace('/lyric ', '')
             const url = await get_url(query).catch((err) => {
-                bot.sendMessage(msg.from.id, `❗Error finding music -> ${query}`)
+                // console.log(err);
+                bot.sendMessage(msg.from.id, `❗Error finding Lyric → ${query}`)
                 send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${JSON.stringify(err)}`)
             })
+            if (url == -1) {
+                status[chatID] = false
+                bot.sendMessage(msg.from.id, `❗Error finding music -> ${query}`)
+                return
+            }
             if (url == null) {
+                bot.sendMessage(msg.from.id, `❗Error finding Lyric → ${query}\n${'\t'.repeat(5)}Please search only in English!`)
                 status[chatID] = false
                 // bot.sendMessage(msg.from.id, `❗Error finding music -> ${query}`)
                 return
             }
             const lyric = await get_lyric(url).catch((err) => {
                 bot.sendMessage(msg.from.id, `❗Error fetching Lyrics, please contact @NiGhTFuRyZz`)
-                status[chatID] = false
                 send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${JSON.stringify(err)}`)
             })
 
@@ -69,21 +76,26 @@ bot.on('/lyric', async msg => {
                         let current = 0
                         const interval = setInterval(() => {
                             if (current === verses.length) {
-                            clearInterval(interval)
-                            } else {
-                            bot.sendMessage(msg.from.id, verses[current]).catch((err) => {
-                                if (err.description.includes('long')) {
-                                    bot.sendMessage(msg.from.id, `❗[Error] Lyric is too long please inform @NiGhTFuRyZz with this error.`)
-                                    status[chatID] = false
-                                    send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${JSON.stringify(err)}`)
-                                }
-                                else {
-                                    bot.sendMessage(msg.from.id, `❗[Error] occurred, if this error presists please contact @NiGhTFuRyZz`)
-                                    status[chatID] = false
-                                    send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${JSON.stringify(err)}`)
-                                }
-                            })
-                            current++
+                                status[chatID] = false
+                                clearInterval(interval)
+                                console.log(status[chatID]);
+
+
+                            } 
+                            else {
+                                bot.sendMessage(msg.from.id, verses[current]).catch((err) => {
+                                    if (err.description.includes('long')) {
+                                        bot.sendMessage(msg.from.id, `❗[Error] Lyric is too long please inform @NiGhTFuRyZz with this error.`)
+                                        status[chatID] = false
+                                        send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${JSON.stringify(err)}`)
+                                    }
+                                    else {
+                                        bot.sendMessage(msg.from.id, `❗[Error] occurred, if this error presists please contact @NiGhTFuRyZz`)
+                                        status[chatID] = false
+                                        send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${JSON.stringify(err)}`)
+                                    }
+                                })
+                                current++
                             }
                         }, 1500)
                         status[chatID] = false
@@ -97,8 +109,10 @@ bot.on('/lyric', async msg => {
                     send_log(bot, `User: ${msg.from.id}\nQuery: ${msg.query}\nError: ${JSON.stringify(err)}`)
                 })
             }
+            status[chatID] = false
     
         })
+
 
 })
 
