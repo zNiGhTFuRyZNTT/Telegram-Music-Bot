@@ -1,0 +1,1 @@
+console.log(`aaaaaaaa`.slice(0, 4));

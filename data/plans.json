@@ -1,0 +1,29 @@
+[
+    {
+        "title": "Free",
+        "price": 0,
+        "months_count": 0
+
+    },
+    {
+        "title": "Monthly",
+        "price": 49000,
+        "months_count": 1
+    },
+    {
+        "title": "Semiannual",
+        "price": 199000,
+        "months_count": 6
+
+    },
+    {
+        "title": "Annual",
+        "price": 399000,
+        "months_count": 12
+    },
+    {
+        "title": "Premium",
+        "price": 2000000,
+        "months_count": 200
+    }
+]

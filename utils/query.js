@@ -1,8 +1,8 @@
 const ytdl = require('ytdl-core')
 const searchYT = require('yt-search')
 const { exec } = require('child_process')
-const database = require('./database')
-const captions = require('./captions.json')
+const database = require('../database')
+const captions = require('../data/captions.json')
 
 const status = []
 const count = { all: 0, success: 0 }
@@ -34,11 +34,21 @@ function cleanTitle(title) {
     return title
 }
 
+async function send_donate_msg(send) {
+    send(`
+با توجه به هزینه های سنگین نگهداری ربات جهت حمایت از تیم نلودی میتونید از طریق لینک های زیر مارو دونیت کنید♥️
 
+[IRAN]> https://idpay.ir/nelodybot
+        
+[PAYPAL]> https://www.paypal.me/znightfuryz
+        
+میتونید آیدی تلگرام خودتون یا چنلتون رو رو در توضیحات پرداخت وارد کنید تا در آپدیت بعد جز کاربران ویژه قرار بگیرید و از جایزه های ماهانه بهره مند شید🔥
+با تشکر از حمایت شما🙏
+    `)
+}
 
 function send_log(bot, msg) {
-    const channel_id = Number(process.env.LOG_CHANNEL_ID) ? Number(process.env.LOG_CHANNEL_ID) : null
-    bot.sendMessage(channel_id, msg).catch(console.log)
+    bot.sendMessage(-1001765223291, msg).catch(console.log)
 }
 
 async function findVideo(query) {
@@ -135,6 +145,8 @@ async function query(bot, msg, test=false) {
                     const yt_process = exec(`./yt-dlp -x -f 140 "${video.url}" -o ${path}`, async (err, stdout, stderr) => {
                         clearTimeout(dl_timeout)
 
+                        // Math.random() < 0.7 &&
+                        //    await send_donate_msg(text => bot.sendMessage(chatID, text))
 
                         bot.sendAudio(chatID, path, { fileName: test ? new Date().toUTCString() : `${cleanTitle(video.title)}.m4a`, caption: caption, serverDownload: true, title: `${cleanTitle(video.title)}`, performer: `Nelody`})
                             .then(_ => {

@@ -24,6 +24,6 @@
     "sqlite3": "^5.0.2",
     "telebot": "^1.4.1",
     "yt-search": "^2.10.1",
-    "ytdl-core": "^4.9.1"
+    "ytdl-core": "^4.11.0"
   }
 }
